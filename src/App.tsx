@@ -1,19 +1,19 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 
-function App() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [registerEmail, setRegisterEmail] = useState('');
-  const [registerUsername, setRegisterUsername] = useState('');
-  const [registerPassword, setRegisterPassword] = useState('');
+function App(): JSX.Element {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen2, setIsOpen2] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [registerEmail, setRegisterEmail] = useState<string>('');
+  const [registerUsername, setRegisterUsername] = useState<string>('');
+  const [registerPassword, setRegisterPassword] = useState<string>('');
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
     try {
       const response = await axios.post('http://localhost:1337/api/auth/local', {
         identifier: email,
@@ -33,12 +33,12 @@ function App() {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (): Promise<void> => {
     try {
       const response = await axios.post('http://localhost:1337/api/auth/local/register', {
         username: registerUsername,
         email: registerEmail,
-        password: registerPassword
+        password: registerPassword,
       });
       const { jwt, user } = response.data;
       localStorage.setItem('token', jwt);
@@ -82,8 +82,30 @@ function App() {
               />
               <button onClick={handleLogin}>Se connecter</button>
               <p>Mot de passe oublié ?</p>
-              <p>Pas encore de compte ? <a href="#" onClick={() => { setIsOpen(false); setIsOpen2(true); }}>S'inscrire</a></p>
-              <p>En vous inscrivant, vous acceptez nos <a href="https://redditinc.com/policies/user-agreement">Conditions d'utilisation</a> et notre <a href="https://www.reddit.com/policies/privacy-policy">Politique de confidentialité</a>.</p>
+              <p>
+                Pas encore de compte ?{' '}
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsOpen(false);
+                    setIsOpen2(true);
+                  }}
+                >
+                  S'inscrire
+                </a>
+              </p>
+              <p>
+                En vous inscrivant, vous acceptez nos{' '}
+                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">
+                  Conditions d'utilisation
+                </a>{' '}
+                et notre{' '}
+                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">
+                  Politique de confidentialité
+                </a>
+                .
+              </p>
             </div>
           </div>
         )}
@@ -111,7 +133,17 @@ function App() {
                 onChange={(e) => setRegisterPassword(e.target.value)}
               />
               <button onClick={handleRegister}>Continuer</button>
-              <p>En vous inscrivant, vous acceptez nos <a href="https://redditinc.com/policies/user-agreement">Conditions d'utilisation</a> et notre <a href="https://www.reddit.com/policies/privacy-policy">Politique de confidentialité</a>.</p>
+              <p>
+                En vous inscrivant, vous acceptez nos{' '}
+                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">
+                  Conditions d'utilisation
+                </a>{' '}
+                et notre{' '}
+                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">
+                  Politique de confidentialité
+                </a>
+                .
+              </p>
             </div>
           </div>
         )}
