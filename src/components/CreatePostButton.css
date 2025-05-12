@@ -1,0 +1,43 @@
+.create-post-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #272729;
+    color: #d7dadc;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 0 0 1px #343536;
+}
+
+.create-post-button:hover {
+    box-shadow: 0 0 0 1px #d7dadc;
+}
+
+.create-post-button:active {
+    transform: scale(0.98);
+}
+
+.button-icon {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-text {
+    font-weight: 500;
+}
+
+.create-post-button[title="Connectez-vous"] {
+    opacity: 0.8;
+    border-style: dashed;
+}
+
+.create-post-button[title="Connectez-vous"]:hover {
+    opacity: 1;
+    background-color: #272729;
+    border-color: #d7dadc;
+}

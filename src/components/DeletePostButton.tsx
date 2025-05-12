@@ -34,4 +34,4 @@ function DeletePost({ postId }: DeletePostProps) {
   );
 }
 
-export default DeletePost;
+export default DeletePost; 

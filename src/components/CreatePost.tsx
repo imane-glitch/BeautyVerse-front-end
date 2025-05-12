@@ -1,44 +1,46 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import './PostForm.css';
+import './CreatePost.css';
 
-axios.defaults.baseURL = 'http://localhost:1337/';
-
-function CreatePost() {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-
-    try {
-      await axios.post(
-        '/api/posts',
-        { data: { title, content } },
-        {
-          headers: {
-            Authorization: Bearer ${token},
-          },
-        }
-      );
-      alert('Post créé !');
-    } catch (err) {
-      alert('Erreur lors de la création du post');
-      console.error(err);
-    }
-  };
+const CreatePost: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('text');
 
   return (
-    <div className="form-container">
-      <h2>Créer un post</h2>
-      <form onSubmit={handleCreate}>
-        <input type="text" placeholder="Titre" onChange={(e) => setTitle(e.target.value)} />
-        <textarea placeholder="Contenu" onChange={(e) => setContent(e.target.value)} />
-        <button type="submit">Créer</button>
-      </form>
+    <div className="create-post-container">
+      <h1 className="create-post-title">Create post</h1>
+
+      <div className="community-select">
+        <span className="community-select-icon">🔍</span>
+        <span>Select a community</span>
+      </div>
+
+      <div className="post-type-tabs">
+        <button 
+          className={post-type-tab ${activeTab === 'text' ? 'active' : ''}}
+          onClick={() => setActiveTab('text')}
+        >
+          Text
+        </button>
+        <button 
+          className={post-type-tab ${activeTab === 'images' ? 'active' : ''}}
+          onClick={() => setActiveTab('images')}
+        >
+          Images & Video
+        </button>
+        <button 
+          className={post-type-tab ${activeTab === 'link' ? 'active' : ''}}
+          onClick={() => setActiveTab('link')}
+        >
+          Link
+        </button>
+        <button 
+          className={post-type-tab ${activeTab === 'poll' ? 'active' : ''}}
+          onClick={() => setActiveTab('poll')}
+        >
+          Poll
+        </button>
+      </div>
     </div>
   );
-}
+};
 
 export default CreatePost;
