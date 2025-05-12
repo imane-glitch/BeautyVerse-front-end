@@ -1,0 +1,45 @@
+.post-card {
+    background-color: #1a1a1b;
+    color: white;
+    border: 1px solid #343536;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    max-width: 640px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .post-header {
+    font-size: 0.75rem;
+    color: #818384;
+    margin-bottom: 0.5rem;
+  }
+  
+  .subreddit {
+    color: #d7dadc;
+    font-weight: bold;
+  }
+  
+  .details {
+    margin-left: 0.5rem;
+  }
+  
+  .post-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: #d7dadc;
+  }
+  
+  .post-image {
+    width: 100%;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+  }
+  
+  .post-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #818384;
+  }
+  
