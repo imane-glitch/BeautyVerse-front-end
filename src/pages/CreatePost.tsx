@@ -119,9 +119,6 @@ function CreatePost() {
         <button 
           className={`form-tab ${activeTab === 'link' ? 'active' : ''}`}
           onClick={() => setActiveTab('link')}>Lien</button>
-        <button 
-          className={`form-tab ${activeTab === 'poll' ? 'active' : ''}`}
-          onClick={() => setActiveTab('poll')}>Poll</button>
       </div>
 
       <form onSubmit={handleCreate}>
@@ -164,9 +161,9 @@ function CreatePost() {
               style={{ display: 'none' }}
             />
             <div className="upload-message">
-              <p>Drag and drop images or videos here</p>
-              <p>or</p>
-              <button type="button" className="upload-button">Upload</button>
+              <p>Glisser et déposez des images ou des vidéos ici</p>
+              <p>ou</p>
+              <button type="button" className="upload-button">Télécharger</button>
             </div>
             {selectedFiles.length > 0 && (
               <div className="selected-files">
@@ -198,7 +195,7 @@ function CreatePost() {
           <div className="link-input-container">
             <input
               type="url"
-              placeholder="Link URL*"
+              placeholder="Lien URL*"
               value={linkUrl}
               onChange={(e) => setLinkUrl(e.target.value)}
               className="link-input"
