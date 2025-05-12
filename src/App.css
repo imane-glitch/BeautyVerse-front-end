@@ -6,21 +6,11 @@
 }
 
 h1 {
-  color: #B28761;
+  color: #ffffff;
+  font-family: 'Lato', sans-Ibarra Real Nova;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
+
 
 @keyframes logo-spin {
   from {
@@ -64,26 +54,19 @@ p {
   height: 100vh; 
 }
 
-.auth-buttons {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  z-index: 1000; /* S'assurer qu'ils sont au-dessus du reste */
-}
+
 
 .auth-buttons {
   position: absolute;
   top: 20px;
   right: 20px;
   display: flex;
-  flex-direction: column; /* <-- superposition verticale */
+  flex-direction: row; ;
   gap: 10px; /* espace entre les boutons */
 }
 
 .auth-buttons button {
-  background-color:#B28761;
+  background-color:#EDBF30;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -92,7 +75,7 @@ p {
 }
 
 .auth-buttons button:hover {
-  background-color: #B28761;
+  background-color: #EDBF30;
   opacity: 0.7;
 }
 
@@ -113,11 +96,11 @@ p {
 
 .modal-content {
   position: relative; /* nécessaire pour positionner .close-button à l’intérieur */
-  background: #888;
+  background: rgb(0, 0, 0);
   padding: 2rem;
   border-radius: 8px;
   width: 300px;
-  box-shadow: 0 0 10px #646cffaa;
+  box-shadow: 0 0 10px #888;
   display: flex;
   flex-direction: column;
   gap: 1rem;

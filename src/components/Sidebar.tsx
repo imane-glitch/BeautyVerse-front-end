@@ -30,21 +30,20 @@ const Sidebar: React.FC = () => {
       </ul>
 
       <SidebarSection title="Thématiques">
-      <button className="custom-feed-button">
-        <span className="plus-icon"></span> Culture internet</button>
-        <span className="custom-feed-button">Mode</span>
-        <span className="custom-feed-button">Musique</span>
-        <span className="custom-feed-button">Jeux vidéo</span>
-        <span className="custom-feed-button">Films</span>
-        <span className="custom-feed-button">Séries</span>
+        <span className="plus-icon"></span> Culture internet
+        <span className="custom-feed-button"></span> Mode
+        <span className="custom-feed-button"></span> Musique
+        <span className="custom-feed-button"></span> Jeux vidéo
+        <span className="custom-feed-button"></span> Films
+        <span className="custom-feed-button"></span> Séries
       </SidebarSection>
 
-      <SidebarSection title="Resources">
-        <button className="custom-feed-button">A propos</button>
-        <button className="custom-feed-button">Aide</button>
-        <button className="custom-feed-button">Blog</button>
-        <button className="custom-feed-button">Carrières</button>
-        <button className="custom-feed-button">Presse</button>
+      <SidebarSection title="Ressources">
+      <span className="plus-icon"></span> A propos
+        <span className="custom-feed-button"></span> Aide
+        <span className="custom-feed-button"></span> Blog
+        <span className="custom-feed-button"></span> Carrières
+        <span className="custom-feed-button"></span> Presse
       </SidebarSection>
     </div>
   );
