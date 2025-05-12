@@ -6,7 +6,7 @@ const CreatePostButton: React.FC = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/submit');
+    navigate('/create-post');
   };
 
   return (

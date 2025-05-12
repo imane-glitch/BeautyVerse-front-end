@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { JSX, useState } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -19,6 +19,17 @@ function App(): JSX.Element {
   const [registerEmail, setRegisterEmail] = useState<string>('');
   const [registerUsername, setRegisterUsername] = useState<string>('');
   const [registerPassword, setRegisterPassword] = useState<string>('');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      console.log('Pas de token trouvé, ouverture du modal d\'inscription');
+      setIsOpen2(true);
+    }
+  }, []);
 
   const handleLogin = async (): Promise<void> => {
     try {
@@ -28,9 +39,9 @@ function App(): JSX.Element {
       });
       const { jwt, user } = response.data;
       localStorage.setItem('token', jwt);
+      setIsAuthenticated(true);
       alert(`Bienvenue ${user.username}`);
       setIsOpen(false);
-      window.location.reload();
     } catch (error: unknown) {
       alert('Erreur de connexion');
       if (axios.isAxiosError(error)) {
@@ -63,13 +74,18 @@ function App(): JSX.Element {
     }
   };
 
+  // Empêcher la fermeture des modals si non authentifié
+  const handleCloseModal = () => {
+    if (isAuthenticated) {
+      setIsOpen(false);
+      setIsOpen2(false);
+    }
+  };
+
   return (
     <Router>
       <div className="app-container">
-        <Navbar 
-          onLoginClick={() => setIsOpen(true)} 
-          onRegisterClick={() => setIsOpen2(true)} 
-        />
+        <Navbar />
         <div className="layout">
           <Sidebar />
           <main className="main-content">
@@ -96,7 +112,9 @@ function App(): JSX.Element {
         {isOpen && (
           <div className="modal-overlay">
             <div className="modal-content">
-              <button className="close-button" onClick={() => setIsOpen(false)}>✖</button>
+              {isAuthenticated && (
+                <button className="close-button" onClick={handleCloseModal}>✖</button>
+              )}
               <h2>Connexion</h2>
               <input 
                 type="email" 
@@ -143,7 +161,9 @@ function App(): JSX.Element {
         {isOpen2 && (
           <div className="modal-overlay">
             <div className="modal-content">
-              <button className="close-button" onClick={() => setIsOpen2(false)}>✖</button>
+              {isAuthenticated && (
+                <button className="close-button" onClick={handleCloseModal}>✖</button>
+              )}
               <h2>S'inscrire</h2>
               <input 
                 type="text" 
