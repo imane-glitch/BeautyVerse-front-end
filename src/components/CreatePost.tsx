@@ -32,12 +32,6 @@ const CreatePost: React.FC = () => {
         >
           Link
         </button>
-        <button 
-          className={`post-type-tab ${activeTab === 'poll' ? 'active' : ''}`}
-          onClick={() => setActiveTab('poll')}
-        >
-          Poll
-        </button>
       </div>
     </div>
   );

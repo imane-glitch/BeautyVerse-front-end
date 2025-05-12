@@ -209,3 +209,37 @@ textarea:focus {
     cursor: not-allowed;
     opacity: 0.5;
 }
+
+.link-input-container {
+    padding: 20px;
+    border-top: 1px solid #343536;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.link-input {
+    width: calc(100% - 40px);
+    height: 48px;
+    background: #1a1a1b;
+    border: 1px solid #343536;
+    border-radius: 4px;
+    padding: 0 16px;
+    color: #d7dadc;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+    margin: 0 20px;
+    box-sizing: border-box;
+}
+
+.link-input:hover {
+    border-color: #d7dadc;
+}
+
+.link-input:focus {
+    outline: none;
+    border-color: #0079d3;
+}
+
+.link-input::placeholder {
+    color: #818384;
+}
