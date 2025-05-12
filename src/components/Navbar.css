@@ -1,25 +1,38 @@
 .navbar {
-  width: 100vw; /* prend toute la largeur de l'écran */
-  height: 60px; /* hauteur de la navbar */
-  background-color: #000000; /* noir */
+  width: 100%;
+  height: 60px;
+  background-color: #000000;
   color: white;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 0 20px;
-  position: fixed; /* fixe la navbar en haut */
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
-  justify-content: space-between; /* espace entre le titre et la barre de recherche */
-  border: 0.5px solid white; /* contour blanc */
   box-sizing: border-box;
+  border-bottom: 0.5px solid white;
 }
 
 .navbar-container {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* titre aligné à gauche */
-  width: 100%; /* s'étend sur toute la largeur */
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 10px;
+}
+
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: fit-content;
+}
+
+.center-section {
+  flex: 1;
+  margin: 0 20px;
+  max-width: 600px;
 }
 
 h1 {
@@ -27,55 +40,88 @@ h1 {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin: 0;
 }
 
 .navbar-title {
   font-size: 24px;
   font-weight: 600;
-  margin-right: auto; /* pousse le titre vers la gauche */
+  white-space: nowrap;
 }
 
 .navbar-logo {
   height: 40px;
-  width: auto;
+  width: 40px;
+  object-fit: contain;
+  display: block;
+}
+
+.search-container {
+  width: 180px;
+  position: relative;
 }
 
 .search-input {
-  position: absolute;  /* Permet de positionner la barre de recherche indépendamment */
-  left: 50%;           /* Positionne la barre de recherche au milieu horizontalement */
-  transform: translateX(-50%); /* Décale de la moitié de sa largeur pour centrer */
-  padding: 0.5rem;
-  border-radius: 30px;
+  width: 100%;
+  padding: 8px 16px;
+  padding-left: 40px;
+  border-radius: 20px;
   border: 1px solid #ccc;
-  width: 500px;      
-  height: 40%;  /* Largeur de la barre de recherche */
+  background-color: #1a1a1b;
+  color: #d7dadc;
+  font-size: 14px;
+  height: 35px;
 }
 
-.layout {
-  padding-top: 60px; /* compense la hauteur de la navbar */
+.search-input:focus {
+  outline: none;
+  border-color: #d7dadc;
 }
 
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
 
 .auth-buttons {
-  position: fixed; /* Fixe les boutons au-dessus du reste du contenu */
-  top: 1rem; /* Distance par rapport au haut de la page */
-  right: 1rem; /* Distance par rapport à la droite de la page */
   display: flex;
-  gap: 1rem;
-  z-index: 1000; /* Assure que les boutons sont au-dessus du reste */
+  gap: 20px;
+  align-items: center;
 }
 
 .auth-buttons button {
   background-color: #EDBF30;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 8px 16px;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  height: 35px;
+  display: flex;
+  align-items: center;
 }
 
 .auth-buttons button:hover {
   background-color: #EDBF30;
-  opacity: 0.7;
+  opacity: 0.9;
+}
+
+.create-post-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #272729;
+  color: #d7dadc;
+  border: 1px solid #343536;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.create-post-button:hover {
+  background-color: #343536;
 }

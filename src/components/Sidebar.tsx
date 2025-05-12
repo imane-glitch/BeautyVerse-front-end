@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
       </ul>
 
       <SidebarSection title="Thématiques">
-        <span className="plus-icon"></span> Culture internet
+        <span className="custom-feed-button"></span> Culture internet
         <span className="custom-feed-button"></span> Mode
         <span className="custom-feed-button"></span> Musique
         <span className="custom-feed-button"></span> Jeux vidéo
@@ -39,11 +39,12 @@ const Sidebar: React.FC = () => {
       </SidebarSection>
 
       <SidebarSection title="Ressources">
-      <span className="plus-icon"></span> A propos
-        <span className="custom-feed-button"></span> Aide
-        <span className="custom-feed-button"></span> Blog
-        <span className="custom-feed-button"></span> Carrières
-        <span className="custom-feed-button"></span> Presse
+      <span className="custom-feed-button"></span> A propos
+      <span className="custom-feed-button"></span> Aide
+      <span className="custom-feed-button"></span> Contact
+      <span className="custom-feed-button"></span> Blog
+      <span className="custom-feed-button"></span> Carrières
+      <span className="custom-feed-button"></span> Presse
       </SidebarSection>
     </div>
   );
