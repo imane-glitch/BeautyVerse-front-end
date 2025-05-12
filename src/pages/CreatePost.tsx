@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, DragEvent } from 'react';
 import axios from 'axios';
 import '../components/PostForm.css';
 
@@ -9,26 +9,82 @@ function CreatePost() {
   const [content, setContent] = useState('');
   const [activeTab, setActiveTab] = useState('text');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+    const formData = new FormData();
+
+    const postData = {
+      title,
+      content,
+      ...(activeTab === 'link' && { link: linkUrl }),
+    };
+
+    formData.append('data', JSON.stringify(postData));
+    
+    if (activeTab === 'images') {
+      selectedFiles.forEach((file) => {
+        formData.append('files.media', file);
+      });
+    }
 
     try {
-      await axios.post(
-        '/api/posts',
-        { data: { title, content } },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post('/api/posts', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       alert('Post créé !');
     } catch (err) {
       alert('Erreur lors de la création du post');
       console.error(err);
     }
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    const mediaFiles = files.filter(file => 
+      file.type.startsWith('image/') || file.type.startsWith('video/')
+    );
+    
+    setSelectedFiles(prevFiles => [...prevFiles, ...mediaFiles]);
+  };
+
+  const handleFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const mediaFiles = files.filter(file => 
+        file.type.startsWith('image/') || file.type.startsWith('video/')
+      );
+      setSelectedFiles(prevFiles => [...prevFiles, ...mediaFiles]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
   };
 
   return (
@@ -89,6 +145,66 @@ function CreatePost() {
             </div>
             <textarea placeholder="Body text (optional)" value={content} onChange={(e) => setContent(e.target.value)} />
           </>
+        )}
+
+        {activeTab === 'images' && (
+          <div 
+            className={`upload-area ${isDragging ? 'dragging' : ''}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={handleFileSelect}
+          >
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileInput}
+              accept="image/*,video/*"
+              multiple
+              style={{ display: 'none' }}
+            />
+            <div className="upload-message">
+              <p>Drag and drop images or videos here</p>
+              <p>or</p>
+              <button type="button" className="upload-button">Upload</button>
+            </div>
+            {selectedFiles.length > 0 && (
+              <div className="selected-files">
+                {selectedFiles.map((file, index) => (
+                  <div key={index} className="file-preview">
+                    {file.type.startsWith('image/') ? (
+                      <img src={URL.createObjectURL(file)} alt="preview" />
+                    ) : (
+                      <video src={URL.createObjectURL(file)} />
+                    )}
+                    <button 
+                      type="button" 
+                      className="remove-file" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFile(index);
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'link' && (
+          <div className="link-input-container">
+            <input
+              type="url"
+              placeholder="Link URL*"
+              value={linkUrl}
+              onChange={(e) => setLinkUrl(e.target.value)}
+              className="link-input"
+              required
+            />
+          </div>
         )}
 
         <div className="button-group">
