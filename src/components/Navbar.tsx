@@ -12,7 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLoginClick, onRegisterClick }) => {
     <header className="navbar">
       <div className="navbar-container">
         <div className="left-section">
-          <img src="/img/logo.png" alt="Logo" className="navbar-logo" />
+          <img src="/img/Capture d’écran 2025-05-12 à 14.33.03.png" alt="Logo" className="navbar-logo" />
           <h1 className="navbar-title">OnSeDit</h1>
         </div>
         

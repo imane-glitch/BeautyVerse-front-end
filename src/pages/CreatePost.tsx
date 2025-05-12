@@ -33,11 +33,11 @@ function CreatePost() {
 
   return (
     <div className="form-container">
-      <h2>Create post</h2>
+      <h2></h2>
       <div className="community-selector" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
         <div className="selector-button">
           <span className="search-icon">🔍</span>
-          <span className="placeholder">Select a community</span>
+          <span className="placeholder">Selectionner une communauté</span>
           <span className="dropdown-arrow">▼</span>
         </div>
         {isDropdownOpen && (
@@ -56,20 +56,20 @@ function CreatePost() {
       <div className="form-tabs">
         <button 
           className={`form-tab ${activeTab === 'text' ? 'active' : ''}`}
-          onClick={() => setActiveTab('text')}>Text</button>
+          onClick={() => setActiveTab('text')}>Texte</button>
         <button 
           className={`form-tab ${activeTab === 'images' ? 'active' : ''}`}
-          onClick={() => setActiveTab('images')}>Images & Video</button>
+          onClick={() => setActiveTab('images')}>Images & Videos</button>
         <button 
           className={`form-tab ${activeTab === 'link' ? 'active' : ''}`}
-          onClick={() => setActiveTab('link')}>Link</button>
+          onClick={() => setActiveTab('link')}>Lien</button>
         <button 
           className={`form-tab ${activeTab === 'poll' ? 'active' : ''}`}
           onClick={() => setActiveTab('poll')}>Poll</button>
       </div>
 
       <form onSubmit={handleCreate}>
-        <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input type="text" placeholder="Titre" value={title} onChange={(e) => setTitle(e.target.value)} />
         <div className="character-count">0/300</div>
 
         {activeTab === 'text' && (
@@ -92,8 +92,8 @@ function CreatePost() {
         )}
 
         <div className="button-group">
-          <button type="button" className="save-draft-button">Save Draft</button>
-          <button type="submit" className="post-button">Post</button>
+          <button type="button" className="save-draft-button">Brouillon</button>
+          <button type="submit" className="post-button">Poster</button>
         </div>
       </form>
     </div>

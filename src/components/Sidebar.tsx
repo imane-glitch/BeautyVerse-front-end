@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon } from '@iconify/react';
 import './Sidebar.css'; // CSS combiné
 
 type SectionProps = {
@@ -24,9 +25,18 @@ const Sidebar: React.FC = () => {
   return (
     <div className="sidebar">
       <ul className="sidebar-links">
-        <li className="sidebar-item">Accueil</li>
-        <li className="sidebar-item">Explorer</li>
-        <li className="sidebar-item">Plus</li>
+        <li className="sidebar-item">
+          <Icon icon="mdi:home" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+          Accueil
+        </li>
+        <li className="sidebar-item">
+          <Icon icon="mdi:magnify" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+          Explorer
+        </li>
+        <li className="sidebar-item">
+          <Icon icon="mdi:dots-horizontal" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+          Plus
+        </li>
       </ul>
 
       <SidebarSection title="Thématiques">
