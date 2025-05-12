@@ -1,8 +1,18 @@
 import axios from 'axios';
 import { JSX, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
+
+import CreatePost from './components/CreatePost.tsx';
+import EditPost from './components/EditPost.tsx';
+import DeletePostButton from './components/DeletePostButton.tsx';
+import './components/PostForm.css';
+import PostPreview from './components/PostPreview.tsx';
+import './components/PostPreview.css';
+import Navbar from './components/Navbar.tsx';
+import './components/Navbar.css';
+import Sidebar from './components/Sidebar.tsx';
+import './components/Sidebar.css';
+
 
 function App(): JSX.Element {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -57,29 +67,20 @@ function App(): JSX.Element {
 
   return (
     <>
-      <div className="auth-buttons">
-        <button onClick={() => setIsOpen(true)}>Se connecter</button>
-        <button onClick={() => setIsOpen2(true)}>S'inscrire</button>
-      </div>
+    <Navbar 
+  onLoginClick={() => setIsOpen(true)} 
+  onRegisterClick={() => setIsOpen2(true)} 
+/>
+      <Sidebar />
 
-      <div className="layout">
+      <div className="layout">  
         {isOpen && (
           <div className="modal-overlay">
             <div className="modal-content">
               <button className="close-button" onClick={() => setIsOpen(false)}>✖</button>
               <h2>Connexion</h2>
-              <input
-                type="email"
-                placeholder="Adresse email *"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                type="password"
-                placeholder="Mot de passe *"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <input type="email" placeholder="Adresse email *"value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input type="password" placeholder="Mot de passe *" value={password} onChange={(e) => setPassword(e.target.value)} />
               <button onClick={handleLogin}>Se connecter</button>
               <p>Mot de passe oublié ?</p>
               <p>
@@ -97,14 +98,9 @@ function App(): JSX.Element {
               </p>
               <p>
                 En vous inscrivant, vous acceptez nos{' '}
-                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">
-                  Conditions d'utilisation
-                </a>{' '}
+                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">Conditions d'utilisation</a>{' '}
                 et notre{' '}
-                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">
-                  Politique de confidentialité
-                </a>
-                .
+                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">Politique de confidentialité</a>
               </p>
             </div>
           </div>
@@ -114,71 +110,45 @@ function App(): JSX.Element {
             <div className="modal-content">
               <button className="close-button" onClick={() => setIsOpen2(false)}>✖</button>
               <h2>S'inscrire</h2>
-              <input
-                type="text"
-                placeholder="Nom d'utilisateur *"
-                value={registerUsername}
-                onChange={(e) => setRegisterUsername(e.target.value)}
-              />
-              <input
-                type="email"
-                placeholder="Adresse email *"
-                value={registerEmail}
-                onChange={(e) => setRegisterEmail(e.target.value)}
-              />
-              <input
-                type="password"
-                placeholder="Mot de passe *"
-                value={registerPassword}
-                onChange={(e) => setRegisterPassword(e.target.value)}
-              />
+              <input type="text" placeholder="Nom d'utilisateur *" value={registerUsername} onChange={(e) => setRegisterUsername(e.target.value)} />
+              <input type="email" placeholder="Adresse email *" value={registerEmail} onChange={(e) => setRegisterEmail(e.target.value)} />
+              <input type="password" placeholder="Mot de passe *" value={registerPassword} onChange={(e) => setRegisterPassword(e.target.value)} />
               <button onClick={handleRegister}>Continuer</button>
               <p>
                 En vous inscrivant, vous acceptez nos{' '}
-                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">
-                  Conditions d'utilisation
-                </a>{' '}
+                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">Conditions d'utilisation</a>{' '}
                 et notre{' '}
-                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">
-                  Politique de confidentialité
-                </a>
-                .
+                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">Politique de confidentialité</a>
               </p>
             </div>
           </div>
         )}
 
-        <div className="card">
-          <aside className="sidebar">
-            <h1>BeautyVerse</h1>
-            <menu>Home</menu>
-            <menu>Explore</menu>
-            <menu>Notifications</menu>
-            <menu>Messages</menu>
-            <menu>Profile</menu>
-            <menu>Blog</menu>
-            <menu>More</menu>
-            <button>Post</button>
-          </aside>
-
           <main className="main-content">
-            <div>
-              <a href="https://vite.dev" target="_blank" rel="noreferrer">
-                <img src={viteLogo} className="logo" alt="Vite logo" />
-              </a>
-              <a href="https://react.dev" target="_blank" rel="noreferrer">
-                <img src={reactLogo} className="logo react" alt="React logo" />
-              </a>
-            </div>
-            <p>
-              Edit <code>src/App.tsx</code> and save to test HMR
-            </p>
-            <p className="read-the-docs">
-              Click on the Vite and React logos to learn more
-            </p>
+            <h2>Gérer les posts</h2>
+
+  {/* 1. Créer un post */}
+  <CreatePost />
+
+  {/* 2. Modifier le post avec ID 1 */}
+  <EditPost postId={1} />
+
+  {/* 3. Supprimer le post avec ID 1 */}
+  <DeletePostButton postId={1} />
+
+  <PostPreview
+  title="The Abyss - Behind The Scenes 1989"
+  imageUrl="/your/image/path.jpg"
+  subreddit="r/Moviesinthemaking"
+  author="u/mec"
+  timeAgo="22h"
+  upvotes={171}
+  comments={7}
+/>
+
+
           </main>
         </div>
-      </div>
     </>
   );
 }

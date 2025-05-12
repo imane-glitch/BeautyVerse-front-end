@@ -1,0 +1,72 @@
+.navbar {
+  width: 100vw; /* prend toute la largeur de l'écran */
+  height: 60px; /* hauteur de la navbar */
+  background-color: #6a6a6a;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed; /* fixe la navbar en haut */
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  justify-content: space-between; /* espace entre le titre et la barre de recherche */
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* titre aligné à gauche */
+  width: 100%; /* s'étend sur toute la largeur */
+}
+
+h1 {
+  color: white;
+}
+
+.navbar-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-right: auto; /* pousse le titre vers la gauche */
+}
+
+.search-input {
+  position: absolute;  /* Permet de positionner la barre de recherche indépendamment */
+  left: 50%;           /* Positionne la barre de recherche au milieu horizontalement */
+  transform: translateX(-50%); /* Décale de la moitié de sa largeur pour centrer */
+  padding: 0.5rem;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  width: 500px;      
+  height: 40%;  /* Largeur de la barre de recherche */
+}
+
+.layout {
+  padding-top: 60px; /* compense la hauteur de la navbar */
+}
+
+
+.auth-buttons {
+  position: fixed; /* Fixe les boutons au-dessus du reste du contenu */
+  top: 1rem; /* Distance par rapport au haut de la page */
+  right: 1rem; /* Distance par rapport à la droite de la page */
+  display: flex;
+  gap: 1rem;
+  z-index: 1000; /* Assure que les boutons sont au-dessus du reste */
+}
+
+.auth-buttons button {
+  background-color: #B28761;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.auth-buttons button:hover {
+  background-color: #B28761;
+  opacity: 0.7;
+}
+
