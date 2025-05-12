@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { JSX, useState, useEffect } from 'react';
+import { JSX, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -11,74 +11,125 @@ import './components/Navbar.css';
 import Sidebar from './components/Sidebar';
 import './components/Sidebar.css';
 
+// Composants modaux définis en dehors de App
+interface SignupModalProps {
+  registerUsername: string;
+  registerEmail: string;
+  registerPassword: string;
+  onUsernameChange: (value: string) => void;
+  onEmailChange: (value: string) => void;
+  onPasswordChange: (value: string) => void;
+  onRegister: () => void;
+}
+
+const SignupModal: React.FC<SignupModalProps> = ({
+  registerUsername,
+  registerEmail,
+  registerPassword,
+  onUsernameChange,
+  onEmailChange,
+  onPasswordChange,
+  onRegister
+}) => (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h2>S'inscrire</h2>
+      <input
+        type="text"
+        placeholder="Nom d'utilisateur"
+        value={registerUsername}
+        onChange={(e) => onUsernameChange(e.target.value)}
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={registerEmail}
+        onChange={(e) => onEmailChange(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Mot de passe"
+        value={registerPassword}
+        onChange={(e) => onPasswordChange(e.target.value)}
+      />
+      <button onClick={onRegister}>S'inscrire</button>
+    </div>
+  </div>
+);
+
+interface LoginModalProps {
+  email: string;
+  password: string;
+  onEmailChange: (value: string) => void;
+  onPasswordChange: (value: string) => void;
+  onLogin: () => void;
+}
+
+const LoginModal: React.FC<LoginModalProps> = ({
+  email,
+  password,
+  onEmailChange,
+  onPasswordChange,
+  onLogin
+}) => (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h2>Se connecter</h2>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => onEmailChange(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Mot de passe"
+        value={password}
+        onChange={(e) => onPasswordChange(e.target.value)}
+      />
+      <button onClick={onLogin}>Se connecter</button>
+    </div>
+  </div>
+);
+
 function App(): JSX.Element {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isOpen2, setIsOpen2] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [registerEmail, setRegisterEmail] = useState<string>('');
-  const [registerUsername, setRegisterUsername] = useState<string>('');
-  const [registerPassword, setRegisterPassword] = useState<string>('');
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerUsername, setRegisterUsername] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      console.log('Pas de token trouvé, ouverture du modal d\'inscription');
-      setIsOpen2(true);
-    }
-  }, []);
-
-  const handleLogin = async (): Promise<void> => {
+  const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:1337/api/auth/local', {
         identifier: email,
         password: password,
       });
-      const { jwt, user } = response.data;
-      localStorage.setItem('token', jwt);
-      setIsAuthenticated(true);
-      alert(`Bienvenue ${user.username}`);
-      setIsOpen(false);
-    } catch (error: unknown) {
+      localStorage.setItem('token', response.data.jwt);
+      alert('Connexion réussie !');
+      setShowLoginModal(false);
+    } catch (error) {
       alert('Erreur de connexion');
-      if (axios.isAxiosError(error)) {
-        console.error(error.response);
-      } else {
-        console.error(error);
-      }
+      console.error(error);
     }
   };
 
-  const handleRegister = async (): Promise<void> => {
+  const handleRegister = async () => {
     try {
       const response = await axios.post('http://localhost:1337/api/auth/local/register', {
         username: registerUsername,
         email: registerEmail,
         password: registerPassword,
       });
-      const { jwt, user } = response.data;
-      localStorage.setItem('token', jwt);
-      alert(`Compte créé pour ${user.username}`);
-      setIsOpen2(false);
-      setIsOpen(true);
-    } catch (error: unknown) {
+      localStorage.setItem('token', response.data.jwt);
+      alert('Inscription réussie !');
+      setShowSignupModal(false);
+      setShowLoginModal(true);
+    } catch (error) {
       alert('Erreur d\'inscription');
-      if (axios.isAxiosError(error)) {
-        console.error(error.response);
-      } else {
-        console.error(error);
-      }
-    }
-  };
-
-  // Empêcher la fermeture des modals si non authentifié
-  const handleCloseModal = () => {
-    if (isAuthenticated) {
-      setIsOpen(false);
-      setIsOpen2(false);
+      console.error(error);
     }
   };
 
@@ -108,94 +159,25 @@ function App(): JSX.Element {
           </main>
         </div>
 
-        {/* Modal de connexion */}
-        {isOpen && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              {isAuthenticated && (
-                <button className="close-button" onClick={handleCloseModal}>✖</button>
-              )}
-              <h2>Connexion</h2>
-              <input 
-                type="email" 
-                placeholder="Adresse email *" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-              />
-              <input 
-                type="password" 
-                placeholder="Mot de passe *" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-              />
-              <button onClick={handleLogin}>Se connecter</button>
-              <p>Mot de passe oublié ?</p>
-              <p>
-                Pas encore de compte ?{' '}
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsOpen(false);
-                    setIsOpen2(true);
-                  }}
-                >
-                  S'inscrire
-                </a>
-              </p>
-              <p>
-                En vous inscrivant, vous acceptez nos{' '}
-                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">
-                  Conditions d'utilisation
-                </a>{' '}
-                et notre{' '}
-                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">
-                  Politique de confidentialité
-                </a>
-              </p>
-            </div>
-          </div>
+        {showSignupModal && (
+          <SignupModal
+            registerUsername={registerUsername}
+            registerEmail={registerEmail}
+            registerPassword={registerPassword}
+            onUsernameChange={setRegisterUsername}
+            onEmailChange={setRegisterEmail}
+            onPasswordChange={setRegisterPassword}
+            onRegister={handleRegister}
+          />
         )}
-
-        {/* Modal d'inscription */}
-        {isOpen2 && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              {isAuthenticated && (
-                <button className="close-button" onClick={handleCloseModal}>✖</button>
-              )}
-              <h2>S'inscrire</h2>
-              <input 
-                type="text" 
-                placeholder="Nom d'utilisateur *" 
-                value={registerUsername} 
-                onChange={(e) => setRegisterUsername(e.target.value)} 
-              />
-              <input 
-                type="email" 
-                placeholder="Adresse email *" 
-                value={registerEmail} 
-                onChange={(e) => setRegisterEmail(e.target.value)} 
-              />
-              <input 
-                type="password" 
-                placeholder="Mot de passe *" 
-                value={registerPassword} 
-                onChange={(e) => setRegisterPassword(e.target.value)} 
-              />
-              <button onClick={handleRegister}>Continuer</button>
-              <p>
-                En vous inscrivant, vous acceptez nos{' '}
-                <a href="https://redditinc.com/policies/user-agreement" target="_blank" rel="noreferrer">
-                  Conditions d'utilisation
-                </a>{' '}
-                et notre{' '}
-                <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noreferrer">
-                  Politique de confidentialité
-                </a>
-              </p>
-            </div>
-          </div>
+        {showLoginModal && (
+          <LoginModal
+            email={email}
+            password={password}
+            onEmailChange={setEmail}
+            onPasswordChange={setPassword}
+            onLogin={handleLogin}
+          />
         )}
       </div>
     </Router>
