@@ -56,6 +56,22 @@ const Sidebar: React.FC = () => {
       <span className="custom-feed-button"></span> Carrières
       <span className="custom-feed-button"></span> Presse
       </SidebarSection>
+
+      <SidebarSection title="Communautés">
+  <button
+    className="create-community-button"
+    onClick={() => {
+      // À remplacer par une navigation ou une modale par exemple
+      alert('Créer une communauté');
+    }}
+  >
+    <Icon icon="mdi:plus" style={{ verticalAlign: 'middle', marginRight: '5px' }} />
+    Créer une communauté
+  </button>
+
+  <span className="custom-feed-button"></span> A propos
+</SidebarSection>
+
     </div>
   );
 };
