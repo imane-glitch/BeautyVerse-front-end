@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PostPreview from './components/PostPreview';
-
 axios.defaults.baseURL = 'http://localhost:1337';
 
 interface Post {
