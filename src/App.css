@@ -172,11 +172,18 @@ button {
   color: #888;
 }
 
-.posts-container {
+.content-wrapper {
+  display: flex;
   width: 100%;
-  position: relative;
-  padding: 50px;
-  padding-right: 300px; 
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.posts-container {
+  flex: 1;
+  max-width: 800px;
 }
 
 .popular-box {
@@ -184,4 +191,37 @@ button {
   right: 0;
   top: 50px;
   padding:40px;
+}
+
+.App {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 60px; /* Pour la navbar */
+}
+
+.content-container {
+  display: flex;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 20px;
+  gap: 24px;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0; /* Pour éviter le débordement */
+  margin: 0 24px;
+}
+
+/* Ajustement pour la sidebar gauche */
+.sidebar {
+  min-width: 250px;
+  margin-right: 24px;
+}
+
+/* Ajustement pour la sidebar droite */
+.right-sidebar {
+  min-width: 250px;
+  margin-left: 24px;
 }

@@ -9,29 +9,40 @@ interface Block {
   }>;
 }
 
-interface PostPreviewProps {
-  title: string;
-  imageUrl?: string;
-  subreddit: string;
-  author: string;
-  timeAgo: string;
-  upvotes: number;
-  comments: number;
-  content?: Block[] | string;
-  link?: string;
+interface ImageData {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: string | null;
+  caption: string | null;
+  url: string;
 }
 
-const PostPreview: React.FC<PostPreviewProps> = ({
-  title,
-  imageUrl,
-  subreddit,
-  author,
-  timeAgo,
-  upvotes,
-  comments,
-  content,
-  link
-}) => {
+interface Post {
+  id: number;
+  title: string;
+  content: string | Block[];
+  link?: string;
+  createdAt: string;
+  publishedAt: string;
+  like_count: number;
+  user: {
+    id: number;
+    username: string;
+  } | null;
+  subreddit: {
+    id: number;
+    name: string;
+  } | null;
+  image: ImageData[] | null;
+}
+
+interface PostPreviewProps {
+  post: Post;
+  formatTimeAgo: (dateString: string) => string;
+}
+
+const PostPreview: React.FC<PostPreviewProps> = ({ post, formatTimeAgo }) => {
   const renderContent = (content: Block[] | string | undefined) => {
     if (!content) return null;
 
@@ -59,39 +70,44 @@ const PostPreview: React.FC<PostPreviewProps> = ({
     );
   };
 
+  const STRAPI_URL = 'http://localhost:1337';
+  const imageUrl = post.image && post.image.length > 0 ? `${STRAPI_URL}${post.image[0].url}` : undefined;
+
   return (
     <div className="post-card">
       <div className="post-header">
-        <span className="post-subreddit">{subreddit}</span>
+        <span className="post-subreddit">
+          {post.subreddit ? `r/${post.subreddit.name}` : ''}
+        </span>
         <span className="post-metadata">
-          Posted by {author} {timeAgo}
+          Posted by {post.user ? `u/${post.user.username}` : 'u/anonymous'} {formatTimeAgo(post.publishedAt || post.createdAt)}
         </span>
       </div>
 
-      <h3 className="post-title">{title}</h3>
+      <h3 className="post-title">{post.title}</h3>
       
-      {renderContent(content)}
+      {renderContent(post.content)}
       
       {imageUrl && (
         <div className="post-image-container">
-          <img src={imageUrl} alt={title} className="post-image" />
+          <img src={imageUrl} alt={post.title} className="post-image" />
         </div>
       )}
       
-      {link && (
-        <a href={link} target="_blank" rel="noopener noreferrer" className="post-link">
-          {link}
+      {post.link && (
+        <a href={post.link} target="_blank" rel="noopener noreferrer" className="post-link">
+          {post.link}
         </a>
       )}
 
       <div className="post-footer">
         <div className="post-votes">
           <span>↑</span>
-          <span>{upvotes}</span>
+          <span>{post.like_count || 0}</span>
           <span>↓</span>
         </div>
         <div className="post-comments">
-          <span>💬 {comments} comments</span>
+          <span>💬 0 comments</span>
         </div>
       </div>
     </div>

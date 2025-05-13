@@ -12,6 +12,8 @@ import Sidebar from './components/Sidebar';
 import './components/Sidebar.css';
 import './components/PopularCommunities.css';
 import PopularCommunities from './components/PopularCommunities';
+import RightSidebar from './components/RightSidebar';
+import './components/RightSidebar.css';
 
 interface SignupModalProps {
   registerUsername: string;
@@ -308,59 +310,40 @@ function App(): JSX.Element {
 
   return (
     <Router>
-      <div className="app-container">
+      <div className="App">
         <Navbar />
-        <div className="layout">
+        <div className="content-container">
           <Sidebar />
           <main className="main-content">
             <Routes>
               <Route path="/create-post" element={<CreatePostPage />} />
-              <Route path="/" element={
-                <div className="posts-container">
-                  {posts.map((post: Post) => {
-                    const token = localStorage.getItem('token');
-                    let currentUsername = '';
-                    if (token) {
-                      try {
-                        const tokenData = JSON.parse(atob(token.split('.')[1]));
-                        if (tokenData.id === post.user?.id) {
-                          currentUsername = post.user?.username || 'Vous';
-                        }
-                      } catch (e) {
-                        console.error('Erreur lors du décodage du token:', e);
-                      }
-                    }
-
-                    return (
+              <Route
+                path="/"
+                element={
+                  <>
+                    {posts.map((post) => (
                       <PostPreview
                         key={post.id}
-                        title={post.title}
-                        imageUrl={post.image && post.image.length > 0 ? `${STRAPI_URL}${post.image[0].url}` : undefined}
-                        subreddit={post.subreddit?.name ? `r/${post.subreddit.name}` : ''}
-                        author={post.user?.username ? `u/${post.user.username}` : 'u/anonymous'}
-                        timeAgo={formatTimeAgo(post.publishedAt || post.createdAt)}
-                        upvotes={post.like_count || 0}
-                        comments={0}
-                        content={Array.isArray(post.content) ? 
-                          post.content.map(block => ({
-                            ...block,
-                            children: block.children.map(child => ({
-                              ...child,
-                              text: child.text || ''
-                            }))
-                          })) : 
-                          post.content
-                        }
-                        link={post.link}
+                        post={post}
+                        formatTimeAgo={formatTimeAgo}
                       />
-                    );
-                  })}
-                </div>
-              } />
+                    ))}
+                  </>
+                }
+              />
             </Routes>
           </main>
+          <RightSidebar />
         </div>
-
+        {showLoginModal && (
+          <LoginModal
+            email={email}
+            password={password}
+            onEmailChange={setEmail}
+            onPasswordChange={setPassword}
+            onLogin={handleLogin}
+          />
+        )}
         {showSignupModal && (
           <SignupModal
             registerUsername={registerUsername}
@@ -370,15 +353,6 @@ function App(): JSX.Element {
             onEmailChange={setRegisterEmail}
             onPasswordChange={setRegisterPassword}
             onRegister={handleRegister}
-          />
-        )}
-        {showLoginModal && (
-          <LoginModal
-            email={email}
-            password={password}
-            onEmailChange={setEmail}
-            onPasswordChange={setPassword}
-            onLogin={handleLogin}
           />
         )}
       </div>
