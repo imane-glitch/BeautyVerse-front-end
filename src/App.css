@@ -171,3 +171,19 @@ button {
 .read-the-docs {
   color: #888;
 }
+
+ /* Nouveau layout horizontal */
+ .layout-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 40px; /* espace entre posts et popular */
+}
+
+/* La zone des posts prend tout l’espace restant */
+.posts-container {
+  flex: 1;
+}
+
+/* Le composant PopularCommunities a déjà une largeur fixe (280px), donc rien à changer là */

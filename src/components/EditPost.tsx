@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './EditPost.css';
+import './PostForm.css';
 
 axios.defaults.baseURL = 'http://localhost:1337';
 
@@ -36,25 +36,19 @@ function EditPost({ postId }: EditPostProps) {
   };
 
   return (
-    <div className="edit-post-container">
-      <form className="edit-post-form" onSubmit={handleEdit}>
-        <h2 className="edit-post-title">Modifier le post</h2>
+    <div className="form-container">
+      <h2>Modifier le post</h2>
+      <form onSubmit={handleEdit}>
         <input
           type="text"
           placeholder="Nouveau titre"
-          className="edit-post-input"
-          value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
         <textarea
           placeholder="Nouveau contenu"
-          className="edit-post-textarea"
-          value={content}
           onChange={(e) => setContent(e.target.value)}
         />
-        <button type="submit" className="edit-post-button">
-          Modifier
-        </button>
+        <button type="submit">Modifier</button>
       </form>
     </div>
   );

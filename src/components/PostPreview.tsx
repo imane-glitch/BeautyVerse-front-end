@@ -22,7 +22,7 @@ const PostPreview: React.FC<PostPreviewProps> = ({
           <span className="subreddit">r/MySkin</span>
           <span className="details">• Il y a 34 min</span>
         </div>
-        <img src="https://media.discordapp.net/attachments/1311613492150927360/1371620270254723223/clean_girl_bv.jpg?ex=6823cc6b&is=68227aeb&hm=3ee00eee44c1255aca3d7e5030778b083eb630123ea94794f6c9c2d38de1c3ff&=&format=webp&width=1270&height=1588" alt="La skin care coreenne...j’ai vraiment besoin de parler les filles? foncez  vous me remercirez plus tard" className="post-image" />
+        <img src="https://media.discordapp.net/attachments/1311613492150927360/1371620270254723223/clean_girl_bv.jpg?ex=6823cc6b&is=68227aeb&hm=3ee00eee44c1255aca3d7e5030778b083eb630123ea94794f6c9c2d38de1c3ff&=&format=webp&width=1270&" alt="La skin care coreenne...j’ai vraiment besoin de parler les filles? foncez  vous me remercirez plus tard" className="post-image" />
         <div className="post-footer">
           <span>⬆️ {upvotes}</span>
           <span>💬 {comments} comments</span>
