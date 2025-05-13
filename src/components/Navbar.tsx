@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
-import CreatePostButton from './CreatePostButton.tsx';
+import CreatePostButton from './CreatePostButton';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -13,15 +13,15 @@ const Navbar: React.FC = () => {
   return (
     <header className="navbar">
       <div className="navbar-container">
-        <div className="left-section" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
-          <img src="/img/Capture d'écran 2025-05-12 à 14.33.03.png" alt="Logo" className="navbar-logo" />
+        <div className="left-section" onClick={handleTitleClick}>
+          <img src="/img/logo.png" alt="Logo" className="navbar-logo" />
           <h1 className="navbar-title">OnSeDit</h1>
         </div>
         
         <div className="center-section">
           <input 
             type="text" 
-            placeholder=" Search..." 
+            placeholder="Search..." 
             className="search-input"
           />
         </div>

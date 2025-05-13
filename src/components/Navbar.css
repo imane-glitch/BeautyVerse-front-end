@@ -1,127 +1,98 @@
 .navbar {
-  width: 100%;
-  height: 60px;
   background-color: #000000;
-  color: white;
-  display: flex;
-  align-items: flex-start;
-  padding: 0 20px;
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 1000;
-  box-sizing: border-box;
+  height: 60px;
   border-bottom: 0.5px solid white;
 }
 
 .navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  height: 100%;
+  padding: 0 16px;
   width: 100%;
-  padding-top: 10px;
 }
 
 .left-section {
   display: flex;
   align-items: center;
-  gap: 20px;
-  min-width: fit-content;
-}
-
-.center-section {
-  flex: 1;
-  margin: 0 20px;
-  max-width: 600px;
-}
-
-h1 {
-  color: white;
-  display: flex;
-  align-items: center;
   gap: 10px;
-  margin: 0;
-}
-
-.navbar-title {
-  font-size: 24px;
-  font-weight: 600;
-  white-space: nowrap;
+  cursor: pointer;
+  padding: 0;
 }
 
 .navbar-logo {
   height: 40px;
   width: 40px;
   object-fit: contain;
-  display: block;
 }
 
-.search-container {
-  width: 180px;
-  position: relative;
+.navbar-title {
+  color: white;
+  font-size: 24px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.center-section {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .search-input {
   width: 100%;
-  padding: 8px 16px;
-  padding-left: 40px;
+  padding: 8px 15px;
   border-radius: 20px;
-  border: 1px solid #ccc;
-  background-color: #1a1a1b;
-  color: #d7dadc;
+  border: none;
+  background-color: #1a1a1a;
+  color: white;
   font-size: 14px;
   height: 35px;
 }
 
+.search-input::placeholder {
+  color: #666;
+}
+
 .search-input:focus {
   outline: none;
-  border-color: #d7dadc;
+  background-color: #262626;
 }
 
 .right-section {
   display: flex;
   align-items: center;
-  gap: 25px;
-}
-
-.auth-buttons {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.auth-buttons button {
-  background-color: #EDBF30;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  height: 35px;
-  display: flex;
-  align-items: center;
-}
-
-.auth-buttons button:hover {
-  background-color: #EDBF30;
-  opacity: 0.9;
+  padding: 0;
 }
 
 .create-post-button {
+  background-color: #EDBF30;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  height: 35px;
+  font-size: 14px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #272729;
-  color: #d7dadc;
-  border: 1px solid #343536;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 14px;
+  transition: opacity 0.2s;
+  white-space: nowrap;
 }
 
 .create-post-button:hover {
-  background-color: #343536;
+  opacity: 0.8;
+}
+
+.button-icon {
+  font-size: 1.2rem;
 }
