@@ -14,7 +14,13 @@ const Navbar: React.FC = () => {
     <header className="navbar">
       <div className="navbar-container">
         <div className="left-section" onClick={handleTitleClick}>
-          <img src="/img/logo.png" alt="Logo" className="navbar-logo" />
+          <img 
+            src="/img/logo.png"
+            alt="Logo"
+            width="40"
+            height="40"
+            style={{ marginRight: '10px' }}
+          />
           <h1 className="navbar-title">OnSeDit</h1>
         </div>
         
@@ -25,7 +31,7 @@ const Navbar: React.FC = () => {
             className="search-input"
           />
         </div>
-
+        
         <div className="right-section">
           <CreatePostButton />
         </div>

@@ -27,12 +27,6 @@
   cursor: pointer;
 }
 
-.navbar-logo {
-  height: 40px;
-  width: 40px;
-  object-fit: contain;
-}
-
 .navbar-title {
   color: white;
   font-size: 24px;

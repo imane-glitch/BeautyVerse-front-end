@@ -173,8 +173,10 @@ function App(): JSX.Element {
 
       const response = await api.get('/api/posts', {
         params: {
-          'populate': '*',
-          'sort': ['createdAt:desc']
+          'populate[0]': 'image',
+          'populate[1]': 'user',
+          'populate[2]': 'subreddit',
+          'sort[0]': 'createdAt:desc'
         },
         headers: {
           Authorization: `Bearer ${token}`
