@@ -94,7 +94,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
 function App(): JSX.Element {
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignupModal, setShowSignupModal] = useState(true);
+  const [showSignupModal, setShowSignupModal] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [registerEmail, setRegisterEmail] = useState('');
@@ -127,9 +127,19 @@ function App(): JSX.Element {
       alert('Inscription réussie !');
       setShowSignupModal(false);
       setShowLoginModal(true);
-    } catch (error) {
-      alert('Erreur d\'inscription');
-      console.error(error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response && error.response.data) {
+        const message = error.response.data.error?.message || "Erreur d'inscription";
+        if (message.includes('Email or Username are already taken')) {
+          alert("Le nom d'utilisateur ou l'email est déjà utilisé. Veuillez en choisir un autre.");
+        } else {
+          alert(`Erreur d'inscription: ${message}`);
+        }
+        console.error(error.response);
+      } else {
+        alert("Erreur d'inscription inconnue");
+        console.error(error);
+      }
     }
   };
 
