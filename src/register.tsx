@@ -21,10 +21,16 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     localStorage.setItem('token', jwt);
     alert(`Compte créé pour ${user.username}`);
   } catch (err: unknown) {
-    alert("Erreur d'inscription");
-    if (axios.isAxiosError(err)) {
+    if (axios.isAxiosError(err) && err.response && err.response.data) {
+      const message = err.response.data.error?.message || 'Erreur d\'inscription';
+      if (message.includes('Email or Username are already taken')) {
+        alert("Le nom d'utilisateur ou l'email est déjà utilisé. Veuillez en choisir un autre.");
+      } else {
+        alert(`Erreur d'inscription: ${message}`);
+      }
       console.error(err.response);
     } else {
+      alert("Erreur d'inscription inconnue");
       console.error(err);
     }
   }
