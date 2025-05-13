@@ -1,0 +1,240 @@
+.create-subreddit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #1a1a1b;
+    padding: 20px;
+    border-radius: 4px;
+    width: 80%;
+    max-width: 400px;
+    color: #d7dadc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #343536;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 16px;
+    color: #d7dadc;
+    font-weight: 500;
+  }
+  
+  .close-button {
+    background: none;
+    border: none;
+    color: #818384;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    width: auto;
+  }
+  
+  .close-button:hover {
+    color: #d7dadc;
+  }
+  
+  .form-group {
+    margin-bottom: 16px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 320px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #d7dadc;
+    font-size: 14px;
+  }
+  
+  .input-prefix {
+    display: flex;
+    align-items: center;
+    background-color: #272729;
+    border: 1px solid #343536;
+    border-radius: 4px;
+    height: 36px;
+    width: 100%;
+    padding: 0 8px;
+    box-sizing: border-box;
+  }
+  
+  .input-prefix input {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 0 12px;
+    color: #d7dadc;
+    font-size: 14px;
+    height: 100%;
+    width: calc(100% - 30px);
+    margin: 0;
+    border-radius: 0;
+    text-align: left;
+  }
+  
+  .input-prefix input:focus {
+    outline: none;
+    background: none;
+    box-shadow: none;
+  }
+  
+  .create-subreddit-modal textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    background-color: #272729;
+    border: 1px solid #343536;
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: #d7dadc;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 70px;
+    max-height: 180px;
+    box-sizing: border-box;
+    overflow: auto;
+  }
+  
+  .create-subreddit-modal textarea:focus {
+    outline: none;
+    border-color: #d7dadc;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #343536;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 320px;
+  }
+  
+  .cancel-button {
+    background-color: transparent;
+    color: #d7dadc;
+    border: 1px solid #343536;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 32px;
+    width: auto;
+  }
+  
+  .cancel-button:hover {
+    background-color: #272729;
+  }
+  
+  .create-button {
+    background-color: #EDBF30;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    height: 32px;
+    width: auto;
+  }
+  
+  .create-button:hover {
+    opacity: 0.8;
+  }
+  
+  .create-button:disabled,
+  .cancel-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    background-color: rgba(255, 68, 68, 0.1);
+    color: #ff4444;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #ff4444;
+    font-size: 14px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 320px;
+  }
+  
+  .success-message {
+    background-color: rgba(0, 200, 83, 0.1);
+    color: #00c853;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    border: 1px solid #00c853;
+    font-size: 14px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 320px;
+  }
+  
+  small {
+    display: block;
+    color: #818384;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  
+  .textarea-wrapper {
+    background-color: #272729;
+    border: 1px solid #343536;
+    border-radius: 4px;
+    padding: 0 8px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  
+  .textarea-wrapper textarea {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #d7dadc;
+    font-size: 14px;
+    padding: 8px 4px;
+    resize: vertical;
+    box-sizing: border-box;
+    min-height: 70px;
+    max-height: 180px;
+  }
+  
+  .textarea-wrapper textarea:focus {
+    outline: none;
+  }
+  
