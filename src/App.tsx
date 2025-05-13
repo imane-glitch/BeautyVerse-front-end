@@ -4,14 +4,16 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import CreatePostPage from './pages/CreatePost';
-import Home from './home';
+import PostPreview from './components/PostPreview';
 import './components/PostPreview.css';
 import Navbar from './components/Navbar';
 import './components/Navbar.css';
 import Sidebar from './components/Sidebar';
 import './components/Sidebar.css';
+import './components/PopularCommunities.css';
+import PostPreview from './components/PostPreview';
+import PopularCommunities from './components/PopularCommunities';
 
-// Composants modaux définis en dehors de App
 interface SignupModalProps {
   registerUsername: string;
   registerEmail: string;
@@ -34,24 +36,9 @@ const SignupModal: React.FC<SignupModalProps> = ({
   <div className="modal-overlay">
     <div className="modal-content">
       <h2>S'inscrire</h2>
-      <input
-        type="text"
-        placeholder="Nom d'utilisateur"
-        value={registerUsername}
-        onChange={(e) => onUsernameChange(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={registerEmail}
-        onChange={(e) => onEmailChange(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Mot de passe"
-        value={registerPassword}
-        onChange={(e) => onPasswordChange(e.target.value)}
-      />
+      <input type="text" placeholder="Nom d'utilisateur" value={registerUsername} onChange={(e) => onUsernameChange(e.target.value)} />
+      <input type="email" placeholder="Email" value={registerEmail} onChange={(e) => onEmailChange(e.target.value)} />
+      <input type="password" placeholder="Mot de passe" value={registerPassword} onChange={(e) => onPasswordChange(e.target.value)} />
       <button onClick={onRegister}>S'inscrire</button>
     </div>
   </div>
@@ -75,18 +62,8 @@ const LoginModal: React.FC<LoginModalProps> = ({
   <div className="modal-overlay">
     <div className="modal-content">
       <h2>Se connecter</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => onEmailChange(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Mot de passe"
-        value={password}
-        onChange={(e) => onPasswordChange(e.target.value)}
-      />
+      <input type="email" placeholder="Email" value={email} onChange={(e) => onEmailChange(e.target.value)} />
+      <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => onPasswordChange(e.target.value)} />
       <button onClick={onLogin}>Se connecter</button>
     </div>
   </div>
@@ -152,7 +129,19 @@ function App(): JSX.Element {
           <main className="main-content">
             <Routes>
               <Route path="/create-post" element={<CreatePostPage />} />
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={
+                <div className="posts-container">
+                  <PostPreview
+                    title="The Abyss - Behind The Scenes 1989"
+                    imageUrl="/your/image/path.jpg"
+                    subreddit="r/Moviesinthemaking"
+                    author="u/mec"
+                    timeAgo="22h"
+                    upvotes={171}
+                    comments={7}
+                  />
+                </div>
+              } />
             </Routes>
           </main>
         </div>
@@ -183,3 +172,4 @@ function App(): JSX.Element {
 }
 
 export default App;
+

@@ -24,12 +24,15 @@ const PostPreview: React.FC<PostPreviewProps> = ({ posts }) => {
     return <p>Aucun post créé pour le moment.</p>;
   }
 
-  return (
+ /* return (
     <div className="post-preview-container">
       {posts.map((post) => (
         <div key={post.id} className="post-card">
           <h3 className="post-title">{post.title}</h3>
           {post.subreddit && <p className="post-subreddit">r/{post.subreddit.name}</p>}
+
+
+          
           {/* {post.subreddit && <p className="post-subreddit">r/{post.subreddit.name}</p>}
           {post.content && <p className="post-content">{post.content}</p>}
           {post.link && (
@@ -50,10 +53,11 @@ const PostPreview: React.FC<PostPreviewProps> = ({ posts }) => {
             </div>
           )}
           <p className="post-date">Publié le: {new Date(post.createdAt).toLocaleString()}</p> */}
-        </div>
-      ))}
-    </div>
+
+
+
+       /*  </div>
   );
 };
 
-export default PostPreview;
+ export default PostPreview; */
