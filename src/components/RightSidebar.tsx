@@ -31,34 +31,42 @@ const RightSidebar: React.FC = () => {
           },
         });
 
-        console.log('Réponse API subreddits brute:', response.data);
+        console.log('Réponse API subreddits brute:', JSON.stringify(response.data, null, 2));
 
         if (response.data && Array.isArray(response.data.data)) {
-          // Transformation des données pour correspondre à notre structure
           const transformedData = response.data.data.map((item: any) => {
-            // Gestion spéciale de la description
+            // Gestion de la description
             let description = 'Aucune description';
             if (item.description) {
               if (Array.isArray(item.description)) {
-                // Si c'est un tableau, on prend le premier élément ou on utilise une valeur par défaut
-                description = item.description[0]?.toString() || 'Aucune description';
-              } else {
-                description = item.description.toString();
+                description = item.description
+                  .map((block: any) => {
+                    if (block.children) {
+                      return block.children
+                        .map((child: any) => child.text || '')
+                        .join('');
+                    }
+                    return '';
+                  })
+                  .join('\n')
+                  .trim();
+              } else if (typeof item.description === 'string') {
+                description = item.description;
               }
             }
 
             return {
               id: item.id,
-              documentId: item.documentId,
-              name: item.name || item.title || 'Sans nom',
-              description: description,
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
-              publishedAt: item.publishedAt
+              documentId: item.documentId || '',
+              name: item.name || 'Sans nom',
+              description: description || 'Aucune description',
+              createdAt: item.createdAt || '',
+              updatedAt: item.updatedAt || '',
+              publishedAt: item.publishedAt || ''
             };
           });
 
-          console.log('Données transformées:', transformedData);
+          console.log('Données transformées:', JSON.stringify(transformedData, null, 2));
           setSubreddits(transformedData);
         } else {
           setError('Format de données incorrect');
@@ -83,22 +91,19 @@ const RightSidebar: React.FC = () => {
             {!subreddits || subreddits.length === 0 ? (
               <p className="no-communities">Aucune communauté trouvée</p>
             ) : (
-              subreddits.map((subreddit) => {
-                console.log('Rendu subreddit:', subreddit);
-                return (
-                  <div key={subreddit.id} className="community-item">
-                    <div className="community-icon">r/</div>
-                    <div className="community-info">
-                      <h3 className="community-name">
-                        {subreddit.name}
-                      </h3>
-                      <p className="community-description">
-                        {subreddit.description}
-                      </p>
-                    </div>
+              subreddits.map((subreddit) => (
+                <div key={subreddit.id} className="community-item">
+                  <div className="community-icon">r/</div>
+                  <div className="community-info">
+                    <h3 className="community-name">
+                      {subreddit.name}
+                    </h3>
+                    <p className="community-description">
+                      {subreddit.description}
+                    </p>
                   </div>
-                );
-              })
+                </div>
+              ))
             )}
           </div>
         )}
