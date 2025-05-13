@@ -1,63 +1,101 @@
 import React from 'react';
 import './PostPreview.css';
 
-interface Post {
-  id: number;
-  title: string;
-  content?: string;
-  link?: string;
-  image?: string[];
-  createdAt: string;
-  subreddit?: {
-    id: number;
-    name: string;
-  };
+interface Block {
+  type: string;
+  children: Array<{
+    type: string;
+    text: string;
+  }>;
 }
 
 interface PostPreviewProps {
-  posts: Post[];
+  title: string;
+  imageUrl?: string;
+  subreddit: string;
+  author: string;
+  timeAgo: string;
+  upvotes: number;
+  comments: number;
+  content?: Block[] | string;
+  link?: string;
 }
 
-const PostPreview: React.FC<PostPreviewProps> = ({ posts }) => {
-    console.log(posts)
-  if (!posts || posts.length === 0) {
-    return <p>Aucun post créé pour le moment.</p>;
-  }
+const PostPreview: React.FC<PostPreviewProps> = ({
+  title,
+  imageUrl,
+  subreddit,
+  author,
+  timeAgo,
+  upvotes,
+  comments,
+  content,
+  link
+}) => {
+  const renderContent = (content: Block[] | string | undefined) => {
+    if (!content) return null;
 
- /* return (
-    <div className="post-preview-container">
-      {posts.map((post) => (
-        <div key={post.id} className="post-card">
-          <h3 className="post-title">{post.title}</h3>
-          {post.subreddit && <p className="post-subreddit">r/{post.subreddit.name}</p>}
+    if (typeof content === 'string') {
+      return (
+        <div className="post-content">
+          <p>{content}</p>
+        </div>
+      );
+    }
 
+    return (
+      <div className="post-content">
+        {content.map((block, index) => {
+          if (block.type === 'paragraph') {
+            return (
+              <p key={index}>
+                {block.children.map(child => child.text).join('')}
+              </p>
+            );
+          }
+          return null;
+        })}
+      </div>
+    );
+  };
 
-          
-          {/* {post.subreddit && <p className="post-subreddit">r/{post.subreddit.name}</p>}
-          {post.content && <p className="post-content">{post.content}</p>}
-          {post.link && (
-            <p className="post-link">
-              <a href={post.link} target="_blank" rel="noopener noreferrer">{post.link}</a>
-            </p>
-          )}
-          {post.image && post.image.length > 0 && (
-            <div className="post-images">
-              {post.image?.map((imgId, index) => (
-                <img
-                  key={index}
-                  src={`http://localhost:1337/uploads/${imgId}`}
-                  alt={`Post image ${index + 1}`}
-                  className="post-image"
-                />
-              ))}
-            </div>
-          )}
-          <p className="post-date">Publié le: {new Date(post.createdAt).toLocaleString()}</p> */}
+  return (
+    <div className="post-card">
+      <div className="post-header">
+        <span className="post-subreddit">{subreddit}</span>
+        <span className="post-metadata">
+          Posted by {author} {timeAgo}
+        </span>
+      </div>
 
+      <h3 className="post-title">{title}</h3>
+      
+      {renderContent(content)}
+      
+      {imageUrl && (
+        <div className="post-image-container">
+          <img src={imageUrl} alt={title} className="post-image" />
+        </div>
+      )}
+      
+      {link && (
+        <a href={link} target="_blank" rel="noopener noreferrer" className="post-link">
+          {link}
+        </a>
+      )}
 
-
-       /*  </div>
+      <div className="post-footer">
+        <div className="post-votes">
+          <span>↑</span>
+          <span>{upvotes}</span>
+          <span>↓</span>
+        </div>
+        <div className="post-comments">
+          <span>💬 {comments} comments</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
- export default PostPreview; */
+export default PostPreview; 

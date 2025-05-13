@@ -6,52 +6,103 @@
 }
 
 .post-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.post-title {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #666;
 }
 
 .post-subreddit {
-  font-size: 0.9rem;
-  color: #888;
-  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #1a1a1b;
+  margin-right: 8px;
+}
+
+.post-metadata {
+  color: #787c7e;
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 8px 0;
+  color: #1a1a1b;
 }
 
 .post-content {
-  margin-bottom: 0.5rem;
+  padding: 10px 15px;
+  color: #d7dadc;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.post-link a {
-  color: #007bff;
-  text-decoration: none;
+.post-content p {
+  margin: 0 0 10px 0;
 }
 
-.post-link a:hover {
-  text-decoration: underline;
+.post-content p:last-child {
+  margin-bottom: 0;
 }
 
-.post-images {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+.post-content span {
+  white-space: pre-wrap;
+}
+
+.post-image-container {
+  margin: 8px 0;
 }
 
 .post-image {
-  max-width: 100px;
-  max-height: 100px;
-  object-fit: cover;
+  max-width: 100%;
   border-radius: 4px;
 }
 
-.post-date {
-  font-size: 0.8rem;
-  color: #666;
-  text-align: right;
+.post-link {
+  display: block;
+  color: #0079d3;
+  text-decoration: none;
+  margin: 8px 0;
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.post-link:hover {
+  text-decoration: underline;
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #787c7e;
+}
+
+.post-votes {
+  display: flex;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.post-votes span {
+  margin: 0 4px;
+}
+
+.post-comments {
+  display: flex;
+  align-items: center;
+}
+
+.post-comments span {
+  margin-left: 4px;
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { JSX, useState } from 'react';
+import { JSX, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -11,7 +11,6 @@ import './components/Navbar.css';
 import Sidebar from './components/Sidebar';
 import './components/Sidebar.css';
 import './components/PopularCommunities.css';
-import PostPreview from './components/PostPreview';
 import PopularCommunities from './components/PopularCommunities';
 
 interface SignupModalProps {
@@ -69,6 +68,83 @@ const LoginModal: React.FC<LoginModalProps> = ({
   </div>
 );
 
+const STRAPI_URL = 'http://localhost:1337';
+
+interface ImageData {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: string | null;
+  caption: string | null;
+  url: string;
+}
+
+interface StrapiPost {
+  id: number;
+  documentId: string;
+  title: string;
+  content: string | null;
+  createdAt: string;
+  publishedAt: string;
+  like_count: string;
+  link: string | null;
+  user: {
+    id: number;
+    username: string;
+  } | null;
+  subreddit: {
+    id: number;
+    name: string;
+  } | null;
+  image: Array<{
+    id: number;
+    documentId: string;
+    name: string;
+    alternativeText: string | null;
+    caption: string | null;
+    url: string;
+  }> | null;
+}
+
+interface Post {
+  id: number;
+  title: string;
+  content: string | Array<{
+    type: string;
+    children: Array<{
+      text: string;
+      type: string;
+    }>;
+  }>;
+  link?: string;
+  createdAt: string;
+  publishedAt: string;
+  like_count: number;
+  user: {
+    id: number;
+    username: string;
+  } | null;
+  subreddit: {
+    id: number;
+    name: string;
+  } | null;
+  image: ImageData[] | null;
+}
+
+// Créer une instance axios avec la configuration de base
+const api = axios.create({
+  baseURL: STRAPI_URL,
+});
+
+// Intercepteur pour ajouter le token à toutes les requêtes
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 function App(): JSX.Element {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -77,47 +153,155 @@ function App(): JSX.Element {
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerUsername, setRegisterUsername] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log('Token in localStorage:', token);
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setShowLoginModal(true);
+    }
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      console.log('Fetching posts...');
+      const token = localStorage.getItem('token');
+
+      const response = await api.get('/api/posts', {
+        params: {
+          'populate': '*',
+          'sort': ['createdAt:desc']
+        },
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      console.log('Posts response:', response.data);
+      const posts = response.data.results || [];
+      if (posts.length > 0) {
+        console.log('Premier post détaillé:', JSON.stringify(posts[0], null, 2));
+        // Log pour déboguer les images
+        posts.forEach((post: StrapiPost) => {
+          if (post.image && post.image.length > 0) {
+            console.log(`Post "${post.title}" - Image:`, JSON.stringify(post.image[0], null, 2));
+          }
+        });
+      }
+
+      // Transformer les données pour correspondre à notre structure
+      const transformedPosts = posts.map((post: StrapiPost) => ({
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        link: post.link,
+        createdAt: post.createdAt,
+        publishedAt: post.publishedAt,
+        like_count: parseInt(post.like_count) || 0,
+        user: post.user ? {
+          id: post.user.id,
+          username: post.user.username
+        } : null,
+        subreddit: post.subreddit ? {
+          id: post.subreddit.id,
+          name: post.subreddit.name
+        } : null,
+        image: post.image ? post.image.map(img => ({
+          id: img.id,
+          documentId: img.documentId,
+          name: img.name,
+          alternativeText: img.alternativeText,
+          caption: img.caption,
+          url: img.url
+        })) : null
+      }));
+
+      setPosts(transformedPosts);
+    } catch (error) {
+      console.error('Erreur détaillée lors du chargement des posts:', error);
+      if (axios.isAxiosError(error)) {
+        const responseData = error.response?.data;
+        console.log('Détails de l\'erreur:', responseData);
+        
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          console.log('Token expiré ou invalide');
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+          setShowLoginModal(true);
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchPosts();
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:1337/api/auth/local', {
+      console.log('Tentative de connexion...');
+      const response = await api.post('/auth/local', {
         identifier: email,
         password: password,
       });
-      localStorage.setItem('token', response.data.jwt);
-      alert('Connexion réussie !');
+      console.log('Réponse de connexion:', response.data);
+      const token = response.data.jwt;
+      localStorage.setItem('token', token);
+      setIsAuthenticated(true);
       setShowLoginModal(false);
+      setEmail('');
+      setPassword('');
+      // Recharger les posts immédiatement après la connexion
+      await fetchPosts();
     } catch (error) {
-      alert('Erreur de connexion');
-      console.error(error);
+      console.error('Erreur détaillée de connexion:', error);
+      alert('Erreur de connexion. Vérifiez vos identifiants.');
     }
   };
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post('http://localhost:1337/api/auth/local/register', {
+      console.log('Tentative d\'inscription...');
+      const response = await api.post('/auth/local/register', {
         username: registerUsername,
         email: registerEmail,
         password: registerPassword,
       });
-      localStorage.setItem('token', response.data.jwt);
-      alert('Inscription réussie !');
+      console.log('Réponse d\'inscription:', response.data);
+      const token = response.data.jwt;
+      localStorage.setItem('token', token);
+      setIsAuthenticated(true);
       setShowSignupModal(false);
-      setShowLoginModal(true);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response && error.response.data) {
-        const message = error.response.data.error?.message || "Erreur d'inscription";
-        if (message.includes('Email or Username are already taken')) {
-          alert("Le nom d'utilisateur ou l'email est déjà utilisé. Veuillez en choisir un autre.");
-        } else {
-          alert(`Erreur d'inscription: ${message}`);
-        }
-        console.error(error.response);
+      setRegisterEmail('');
+      setRegisterUsername('');
+      setRegisterPassword('');
+      // Recharger les posts immédiatement après l'inscription
+      await fetchPosts();
+    } catch (error) {
+      console.error('Erreur détaillée d\'inscription:', error);
+      if (axios.isAxiosError(error) && error.response?.data?.error) {
+        alert(error.response.data.error.message);
       } else {
-        alert("Erreur d'inscription inconnue");
-        console.error(error);
+        alert('Erreur lors de l\'inscription');
       }
     }
+  };
+
+  const formatTimeAgo = (dateString: string) => {
+    const now = new Date();
+    const postDate = new Date(dateString);
+    const diffInHours = Math.floor((now.getTime() - postDate.getTime()) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'moins d\'une heure';
+    if (diffInHours < 24) return `${diffInHours}h`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    return `${diffInDays}j`;
   };
 
   return (
@@ -131,15 +315,44 @@ function App(): JSX.Element {
               <Route path="/create-post" element={<CreatePostPage />} />
               <Route path="/" element={
                 <div className="posts-container">
-                  <PostPreview
-                    title="The Abyss - Behind The Scenes 1989"
-                    imageUrl="/your/image/path.jpg"
-                    subreddit="r/Moviesinthemaking"
-                    author="u/mec"
-                    timeAgo="22h"
-                    upvotes={171}
-                    comments={7}
-                  />
+                  {posts.map((post: Post) => {
+                    const token = localStorage.getItem('token');
+                    let currentUsername = '';
+                    if (token) {
+                      try {
+                        const tokenData = JSON.parse(atob(token.split('.')[1]));
+                        if (tokenData.id === post.user?.id) {
+                          currentUsername = post.user?.username || 'Vous';
+                        }
+                      } catch (e) {
+                        console.error('Erreur lors du décodage du token:', e);
+                      }
+                    }
+
+                    return (
+                      <PostPreview
+                        key={post.id}
+                        title={post.title}
+                        imageUrl={post.image && post.image.length > 0 ? `${STRAPI_URL}${post.image[0].url}` : undefined}
+                        subreddit={post.subreddit?.name ? `r/${post.subreddit.name}` : ''}
+                        author={post.user?.username ? `u/${post.user.username}` : 'u/anonymous'}
+                        timeAgo={formatTimeAgo(post.publishedAt || post.createdAt)}
+                        upvotes={post.like_count || 0}
+                        comments={0}
+                        content={Array.isArray(post.content) ? 
+                          post.content.map(block => ({
+                            ...block,
+                            children: block.children.map(child => ({
+                              ...child,
+                              text: child.text || ''
+                            }))
+                          })) : 
+                          post.content
+                        }
+                        link={post.link}
+                      />
+                    );
+                  })}
                 </div>
               } />
             </Routes>
