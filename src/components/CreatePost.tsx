@@ -6,7 +6,6 @@ const CreatePost: React.FC = () => {
 
   return (
     <div className="create-post-container">
-      <h1 className="create-post-title">Create post</h1>
       
       <div className="community-select">
         <span className="community-select-icon">🔍</span>

@@ -12,11 +12,12 @@
 .navbar-container {
   max-width: 1280px;
   margin: 0 auto;
-  display: flex;
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
   align-items: center;
   height: 100%;
-  padding: 0 16px;
   width: 100%;
+  padding: 0 16px;
 }
 
 .left-section {
@@ -24,7 +25,6 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  padding: 0;
 }
 
 .navbar-logo {
@@ -41,14 +41,15 @@
 }
 
 .center-section {
-  flex: 1;
-  max-width: 600px;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  width: 100%;
   padding: 0 20px;
 }
 
 .search-input {
   width: 100%;
+  max-width: 600px;
   padding: 8px 15px;
   border-radius: 20px;
   border: none;
@@ -67,26 +68,22 @@
   background-color: #262626;
 }
 
-.right-section {
-  display: flex;
-  align-items: center;
-  padding: 0;
-}
 
 .create-post-button {
   background-color: #EDBF30;
   color: white;
   border: none;
   border-radius: 20px;
-  padding: 8px 16px;
+  padding: 8px 20px;
   height: 35px;
   font-size: 14px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  transition: opacity 0.2s;
+  justify-content: center;
   white-space: nowrap;
+  min-width: fit-content;
+  transition: opacity 0.2s;
 }
 
 .create-post-button:hover {
