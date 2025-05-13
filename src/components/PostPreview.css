@@ -1,45 +1,57 @@
+.post-preview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
 .post-card {
-    background-color: #1a1a1b;
-    color: white;
-    border: 1px solid #343536;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    max-width: 640px;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .post-header {
-    font-size: 0.75rem;
-    color: #818384;
-    margin-bottom: 0.5rem;
-  }
-  
-  .subreddit {
-    color: #d7dadc;
-    font-weight: bold;
-  }
-  
-  .details {
-    margin-left: 0.5rem;
-  }
-  
-  .post-title {
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
-    color: #d7dadc;
-  }
-  
-  .post-image {
-    width: 100%;
-    border-radius: 6px;
-    margin-bottom: 0.75rem;
-  }
-  
-  .post-footer {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem;
-    color: #818384;
-  }
-  
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.post-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-subreddit {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.post-content {
+  margin-bottom: 0.5rem;
+}
+
+.post-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.post-link a:hover {
+  text-decoration: underline;
+}
+
+.post-images {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-image {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.post-date {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: right;
+}

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import CreatePostPage from './pages/CreatePost';
-import PostPreview from './components/PostPreview';
+import Home from './home';
 import './components/PostPreview.css';
 import Navbar from './components/Navbar';
 import './components/Navbar.css';
@@ -152,19 +152,7 @@ function App(): JSX.Element {
           <main className="main-content">
             <Routes>
               <Route path="/create-post" element={<CreatePostPage />} />
-              <Route path="/" element={
-                <div className="posts-container">
-                  <PostPreview
-                    title="The Abyss - Behind The Scenes 1989"
-                    imageUrl="/your/image/path.jpg"
-                    subreddit="r/Moviesinthemaking"
-                    author="u/mec"
-                    timeAgo="22h"
-                    upvotes={171}
-                    comments={7}
-                  />
-                </div>
-              } />
+              <Route path="/" element={<Home />} />
             </Routes>
           </main>
         </div>
