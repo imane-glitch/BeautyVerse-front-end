@@ -11,7 +11,6 @@ import './components/Navbar.css';
 import Sidebar from './components/Sidebar';
 import './components/Sidebar.css';
 import './components/PopularCommunities.css';
-import PopularCommunities from './components/PopularCommunities';
 import RightSidebar from './components/RightSidebar';
 import './components/RightSidebar.css';
 import SearchResults from './pages/SearchResults';
