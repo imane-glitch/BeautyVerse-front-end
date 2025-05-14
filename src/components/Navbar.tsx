@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import CreatePostButton from './CreatePostButton';
@@ -6,9 +6,23 @@ import LogoutButton from './LogoutButton';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleTitleClick = () => {
     navigate('/');
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
   };
 
   return (
@@ -28,8 +42,11 @@ const Navbar: React.FC = () => {
         <div className="center-section">
           <input 
             type="text" 
-            placeholder="Search..." 
+            placeholder="Rechercher..." 
             className="search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
           />
         </div>
         

@@ -14,6 +14,7 @@ import './components/PopularCommunities.css';
 import PopularCommunities from './components/PopularCommunities';
 import RightSidebar from './components/RightSidebar';
 import './components/RightSidebar.css';
+import SearchResults from './pages/SearchResults';
 
 interface SignupModalProps {
   registerUsername: string;
@@ -317,6 +318,7 @@ function App(): JSX.Element {
           <main className="main-content">
             <Routes>
               <Route path="/create-post" element={<CreatePostPage />} />
+              <Route path="/search" element={<SearchResults />} />
               <Route
                 path="/"
                 element={
