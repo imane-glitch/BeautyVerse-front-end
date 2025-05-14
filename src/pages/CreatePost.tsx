@@ -20,27 +20,69 @@ function CreatePost() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [linkUrl, setLinkUrl] = useState('');
+  const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Charger les subreddits existants
     const fetchSubreddits = async () => {
       try {
-        const response = await axios.get('/api/subreddits');
-        setSubreddits(response.data.data.map((item: any) => ({
-          id: item.id,
-          name: item.attributes.name,
-        })));
-      } catch (err) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError('Veuillez vous connecter pour créer un post');
+          return;
+        }
+
+        const response = await axios.get('/api/subreddits', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        if (response.data && response.data.data) {
+          setSubreddits(response.data.data.map((item: any) => ({
+            id: item.id,
+            name: item.name.replace('r/', ''), // Enlever le préfixe r/ s'il existe
+          })));
+        }
+      } catch (err: any) {
         console.error('Erreur lors du chargement des subreddits', err);
+        if (err.response?.status === 403) {
+          setError('Accès refusé. Veuillez vous reconnecter.');
+        } else {
+          setError('Impossible de charger les communautés');
+        }
       }
     };
     fetchSubreddits();
+
+    // Fermer le dropdown quand on clique en dehors
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
+    if (!selectedSubreddit) {
+      setError('Veuillez sélectionner une communauté');
+      return;
+    }
+
+    if (!title.trim()) {
+      setError('Le titre est requis');
+      return;
+    }
+
     const token = localStorage.getItem('token');
 
     const slug = title
@@ -63,20 +105,24 @@ function CreatePost() {
         }
       ] : null,
       slug,
-      ...(selectedSubreddit && { subreddit: selectedSubreddit.id }),
+      subreddit: selectedSubreddit.id,
     };
 
-    if (activeTab === 'link') postData.link = linkUrl;
+    if (activeTab === 'link') {
+      if (!linkUrl.trim()) {
+        setError('Le lien est requis');
+        return;
+      }
+      postData.link = linkUrl;
+    }
 
     const formData = new FormData();
-
 
     try {
       if (selectedFiles.length) {
         selectedFiles.forEach((file) => {
           formData.append('files', file);
         });
-
 
         const res = await axios.post('/api/upload', formData, {
           headers: {
@@ -85,25 +131,21 @@ function CreatePost() {
         });
 
         const imageIds = [];
-
         for (const image of res.data) {
           imageIds.push(image.id);
         }
-
         postData.image = imageIds;
       }
-
 
       await axios.post('/api/posts', { data: postData }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      alert('Post créé !');
       navigate('/');
     } catch (err) {
-      alert('Erreur lors de la création du post');
       console.error(err);
+      setError('Erreur lors de la création du post');
     }
   };
 
@@ -147,60 +189,98 @@ function CreatePost() {
 
   return (
     <div className="form-container">
-      <div className="community-selector" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-        <div className="selector-button">
-          <span className="search-icon">🔍</span>
-          <span className="placeholder">
-            {selectedSubreddit ? selectedSubreddit.name : "Sélectionner une communauté"}
-          </span>
+      {error && <div className="error-message">{error}</div>}
+      
+      <div className="community-selector" ref={dropdownRef}>
+        <div 
+          className={`selector-button ${!selectedSubreddit ? 'required' : ''}`}
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        >
+          {selectedSubreddit ? (
+            <>
+              <span className="selected-community">r/{selectedSubreddit.name}</span>
+            </>
+          ) : (
+            <>
+              <span className="search-icon">🔍</span>
+              <span className="placeholder">Sélectionner une communauté *</span>
+            </>
+          )}
           <span className="dropdown-arrow">▼</span>
         </div>
+        
         {isDropdownOpen && (
           <div className="community-dropdown">
-            {subreddits.map((sub) => (
-              <div
-                key={sub.id}
-                className="community-item"
-                onClick={() => {
-                  setSelectedSubreddit(sub);
-                  setIsDropdownOpen(false);
-                }}
-              >
-                <img src="/default-avatar.png" alt="" className="community-icon" />
-                <div className="community-info">
-                  <div className="community-name">{sub.name}</div>
-                  <div className="community-meta">r/{sub.name}</div>
-                </div>
+            {subreddits.length === 0 ? (
+              <div className="no-communities">
+                Aucune communauté disponible
               </div>
-            ))}
+            ) : (
+              subreddits.map((sub) => (
+                <div
+                  key={sub.id}
+                  className={`community-item ${selectedSubreddit?.id === sub.id ? 'selected' : ''}`}
+                  onClick={() => {
+                    setSelectedSubreddit(sub);
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  <div className="community-info">
+                    <div className="community-name">r/{sub.name}</div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         )}
       </div>
 
-      <div className="form-tabs">
-        <button className={`form-tab ${activeTab === 'text' ? 'active' : ''}`} onClick={() => setActiveTab('text')}>Texte</button>
-        <button className={`form-tab ${activeTab === 'images' ? 'active' : ''}`} onClick={() => setActiveTab('images')}>Images & Vidéos</button>
-        <button className={`form-tab ${activeTab === 'link' ? 'active' : ''}`} onClick={() => setActiveTab('link')}>Lien</button>
-      </div>
+      <form onSubmit={handleCreate} className="post-form">
+        <input
+          type="text"
+          placeholder="Titre *"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="post-title-input"
+        />
 
-      <form onSubmit={handleCreate}>
-        <input type="text" placeholder="Titre" value={title} onChange={(e) => setTitle(e.target.value)} required />
-        <div className="character-count">{title.length}/300</div>
+        <div className="post-type-tabs">
+          <button
+            type="button"
+            className={`tab ${activeTab === 'text' ? 'active' : ''}`}
+            onClick={() => setActiveTab('text')}
+          >
+            Texte
+          </button>
+          <button
+            type="button"
+            className={`tab ${activeTab === 'images' ? 'active' : ''}`}
+            onClick={() => setActiveTab('images')}
+          >
+            Images & Vidéos
+          </button>
+          <button
+            type="button"
+            className={`tab ${activeTab === 'link' ? 'active' : ''}`}
+            onClick={() => setActiveTab('link')}
+          >
+            Lien
+          </button>
+        </div>
 
         {activeTab === 'text' && (
-          <>
-            <div className="formatting-toolbar">
-              <button type="button" className="formatting-button">B</button>
-              <button type="button" className="formatting-button">i</button>
-              {/* Ajoute d'autres boutons si nécessaire */}
-            </div>
-            <textarea placeholder="Contenu (facultatif)" value={content} onChange={(e) => setContent(e.target.value)} />
-          </>
+          <textarea
+            placeholder="Texte (optionnel)"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="post-content-input"
+          />
         )}
 
         {activeTab === 'images' && (
           <div
-            className={`upload-area ${isDragging ? 'dragging' : ''}`}
+            className={`drop-zone ${isDragging ? 'dragging' : ''}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -214,30 +294,15 @@ function CreatePost() {
               multiple
               style={{ display: 'none' }}
             />
-            <div className="upload-message">
-              <p>Glissez et déposez des fichiers ici</p>
-              <p>ou</p>
-              <button type="button" className="upload-button">Télécharger</button>
+            <div className="drop-zone-text">
+              <span>📎 Glissez-déposez vos fichiers ici ou cliquez pour sélectionner</span>
             </div>
             {selectedFiles.length > 0 && (
               <div className="selected-files">
                 {selectedFiles.map((file, index) => (
                   <div key={index} className="file-preview">
-                    {file.type.startsWith('image/') ? (
-                      <img src={URL.createObjectURL(file)} alt="preview" />
-                    ) : (
-                      <video src={URL.createObjectURL(file)} controls />
-                    )}
-                    <button
-                      type="button"
-                      className="remove-file"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeFile(index);
-                      }}
-                    >
-                      ×
-                    </button>
+                    <span>{file.name}</span>
+                    <button type="button" onClick={() => removeFile(index)}>×</button>
                   </div>
                 ))}
               </div>
@@ -246,22 +311,18 @@ function CreatePost() {
         )}
 
         {activeTab === 'link' && (
-          <div className="link-input-container">
-            <input
-              type="url"
-              placeholder="Lien URL*"
-              value={linkUrl}
-              onChange={(e) => setLinkUrl(e.target.value)}
-              className="link-input"
-              required
-            />
-          </div>
+          <input
+            type="url"
+            placeholder="URL"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            className="post-link-input"
+          />
         )}
 
-        <div className="button-group">
-          <button type="button" className="save-draft-button">Brouillon</button>
-          <button type="submit" className="post-button">Poster</button>
-        </div>
+        <button type="submit" className="submit-button">
+          Publier
+        </button>
       </form>
     </div>
   );

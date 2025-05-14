@@ -6,8 +6,8 @@
 }
 
 .post-card {
-  background: white;
-  border: 1px solid #ccc;
+  background: #211F1F;
+  border: 1px solid #343536;
   border-radius: 4px;
   margin-bottom: 16px;
   padding: 12px;
@@ -24,19 +24,19 @@
 
 .post-subreddit {
   font-weight: bold;
-  color: #1a1a1b;
+  color: #d7dadc;
   margin-right: 8px;
 }
 
 .post-metadata {
-  color: #787c7e;
+  color: #818384;
 }
 
 .post-title {
   font-size: 18px;
   font-weight: 500;
   margin: 8px 0;
-  color: #1a1a1b;
+  color: #d7dadc;
 }
 
 .post-content {
@@ -48,6 +48,7 @@
 
 .post-content p {
   margin: 0 0 10px 0;
+  color: #d7dadc;
 }
 
 .post-content p:last-child {
@@ -69,7 +70,7 @@
 
 .post-link {
   display: block;
-  color: #0079d3;
+  color: #4fbcff;
   text-decoration: none;
   margin: 8px 0;
   font-size: 14px;
@@ -85,7 +86,7 @@
   align-items: center;
   margin-top: 8px;
   font-size: 12px;
-  color: #787c7e;
+  color: #818384;
 }
 
 .post-votes {

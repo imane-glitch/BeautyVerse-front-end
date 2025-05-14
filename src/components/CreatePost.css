@@ -1,6 +1,6 @@
 .create-post-container {
   padding: 20px;
-  background-color: #fff;
+  background-color: rgba(0, 0, 0, 0.7);
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -75,5 +75,5 @@
 }
 
 .post-type-tab:hover {
-  background-color: #e0e0e0;
+  background-color: rgba(0, 0, 0, 0.7);
 }
