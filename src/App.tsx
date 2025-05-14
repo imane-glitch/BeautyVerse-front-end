@@ -10,7 +10,6 @@ import Navbar from './components/Navbar';
 import './components/Navbar.css';
 import Sidebar from './components/Sidebar';
 import './components/Sidebar.css';
-import './components/PopularCommunities.css';
 import RightSidebar from './components/RightSidebar';
 import './components/RightSidebar.css';
 import SearchResults from './pages/SearchResults';
@@ -66,6 +65,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       <input type="email" placeholder="Email" value={email} onChange={(e) => onEmailChange(e.target.value)} />
       <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => onPasswordChange(e.target.value)} />
       <button onClick={onLogin}>Se connecter</button>
+      <p>Pas encore de compte ? <span onClick={() => {}}>S'inscrire</span></p>
     </div>
   </div>
 );
