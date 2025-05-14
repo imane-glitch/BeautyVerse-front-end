@@ -51,7 +51,17 @@ function CreatePost() {
 
     const postData: any = {
       title,
-      content,
+      content: content ? [
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: content,
+              type: "text"
+            }
+          ]
+        }
+      ] : null,
       slug,
       ...(selectedSubreddit && { subreddit: selectedSubreddit.id }),
     };

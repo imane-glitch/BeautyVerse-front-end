@@ -2,27 +2,23 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './RightSidebar.css';
 
+interface Block {
+  type: string;
+  children: Array<{
+    text: string;
+    type: string;
+  }>;
+}
+
 interface SubredditData {
   id: number;
   documentId: string;
   name: string;
-  description: string;
+  description: Block[] | null;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
 }
-
-interface BlockText {
-  type: 'text';
-  text: string;
-}
-
-interface BlockParagraph {
-  type: 'paragraph';
-  children: BlockText[];
-}
-
-type Block = BlockParagraph;
 
 const RightSidebar: React.FC = () => {
   const [subreddits, setSubreddits] = useState<SubredditData[]>([]);
@@ -61,19 +57,34 @@ const RightSidebar: React.FC = () => {
           },
         });
 
-        if (response.data && Array.isArray(response.data.data)) {
-          const transformedData = response.data.data.map((item: any) => ({
-            id: item.id,
-            documentId: item.documentId || '',
-            name: item.name || 'Sans nom',
-            description: parseDescription(item.description),
-            createdAt: item.createdAt || '',
-            updatedAt: item.updatedAt || '',
-            publishedAt: item.publishedAt || ''
-          }));
+        console.log('Response data structure:', JSON.stringify(response.data, null, 2));
 
+        if (response.data?.data) {
+          const transformedData = response.data.data.map((item: any) => {
+            if (!item || typeof item !== 'object') {
+              console.error('Invalid item structure:', item);
+              return null;
+            }
+
+            console.log('Processing item:', item);
+
+            return {
+              id: item.id || 0,
+              documentId: item.documentId || '',
+              name: item.name || 'Sans nom',
+              description: Array.isArray(item.description) 
+                ? item.description 
+                : null,
+              createdAt: item.createdAt || '',
+              updatedAt: item.updatedAt || '',
+              publishedAt: item.publishedAt || ''
+            };
+          }).filter(Boolean);
+
+          console.log('Transformed data:', transformedData);
           setSubreddits(transformedData);
         } else {
+          console.error('Invalid response structure:', response.data);
           setError('Format de données incorrect');
         }
       } catch (err) {
@@ -104,7 +115,7 @@ const RightSidebar: React.FC = () => {
                       {subreddit.name}
                     </h3>
                     <p className="community-description">
-                      {subreddit.description || 'Aucune description'}
+                      {parseDescription(subreddit.description)}
                     </p>
                   </div>
                 </div>

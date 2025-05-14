@@ -27,12 +27,30 @@ const CreateSubreddit: React.FC<CreateSubredditProps> = ({ onClose }) => {
       // Formatage du nom pour inclure "r/" si ce n'est pas déjà le cas
       const formattedName = name.startsWith('r/') ? name : `r/${name}`;
 
+      // Formatage de la description selon le format attendu par Strapi
+      const formattedDescription = description ? [
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: description,
+              type: "text"
+            }
+          ]
+        }
+      ] : null;
+
+      console.log('Données envoyées à Strapi:', {
+        name: formattedName,
+        description: formattedDescription
+      });
+
       const response = await axios.post(
         'http://localhost:1337/api/subreddits',
         {
           data: {
             name: formattedName,
-            description,
+            description: formattedDescription,
           }
         },
         {
@@ -43,10 +61,11 @@ const CreateSubreddit: React.FC<CreateSubredditProps> = ({ onClose }) => {
         }
       );
 
+      console.log('Réponse de Strapi:', response.data);
+
       setSuccess(true);
       setName('');
       setDescription('');
-      console.log('Subreddit créé:', response.data);
       
       // Fermer le modal après 2 secondes en cas de succès
       setTimeout(() => {
@@ -97,18 +116,17 @@ const CreateSubreddit: React.FC<CreateSubredditProps> = ({ onClose }) => {
           <div className="form-group">
             <label htmlFor="description">Description</label>
             <div className="textarea-wrapper">
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Décrivez votre communauté..."
-              rows={4}
-              required
-              disabled={isLoading}
-            />
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Décrivez votre communauté..."
+                rows={4}
+                required
+                disabled={isLoading}
+              />
             </div>
           </div>
-
 
           <div className="button-group">
             <button 

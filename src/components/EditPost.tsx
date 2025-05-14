@@ -20,7 +20,20 @@ function EditPost({ postId }: EditPostProps) {
       await axios.put(
         `/api/posts/${postId}`,
         {
-          data: { title, content },
+          data: { 
+            title,
+            content: content ? [
+              {
+                type: "paragraph",
+                children: [
+                  {
+                    text: content,
+                    type: "text"
+                  }
+                ]
+              }
+            ] : null
+          },
         },
         {
           headers: {
