@@ -12,9 +12,39 @@ interface SubredditData {
   publishedAt: string;
 }
 
+interface BlockText {
+  type: 'text';
+  text: string;
+}
+
+interface BlockParagraph {
+  type: 'paragraph';
+  children: BlockText[];
+}
+
+type Block = BlockParagraph;
+
 const RightSidebar: React.FC = () => {
   const [subreddits, setSubreddits] = useState<SubredditData[]>([]);
   const [error, setError] = useState<string>('');
+
+  const parseDescription = (blocks: Block[] | null): string => {
+    if (!blocks || !Array.isArray(blocks)) {
+      return 'Aucune description';
+    }
+
+    return blocks
+      .map(block => {
+        if (block.type === 'paragraph' && Array.isArray(block.children)) {
+          return block.children
+            .map(child => child.text || '')
+            .join('');
+        }
+        return '';
+      })
+      .filter(text => text.length > 0)
+      .join('\n');
+  };
 
   useEffect(() => {
     const fetchSubreddits = async () => {
@@ -31,42 +61,17 @@ const RightSidebar: React.FC = () => {
           },
         });
 
-        console.log('Réponse API subreddits brute:', JSON.stringify(response.data, null, 2));
-
         if (response.data && Array.isArray(response.data.data)) {
-          const transformedData = response.data.data.map((item: any) => {
-            // Gestion de la description
-            let description = 'Aucune description';
-            if (item.description) {
-              if (Array.isArray(item.description)) {
-                description = item.description
-                  .map((block: any) => {
-                    if (block.children) {
-                      return block.children
-                        .map((child: any) => child.text || '')
-                        .join('');
-                    }
-                    return '';
-                  })
-                  .join('\n')
-                  .trim();
-              } else if (typeof item.description === 'string') {
-                description = item.description;
-              }
-            }
+          const transformedData = response.data.data.map((item: any) => ({
+            id: item.id,
+            documentId: item.documentId || '',
+            name: item.name || 'Sans nom',
+            description: parseDescription(item.description),
+            createdAt: item.createdAt || '',
+            updatedAt: item.updatedAt || '',
+            publishedAt: item.publishedAt || ''
+          }));
 
-            return {
-              id: item.id,
-              documentId: item.documentId || '',
-              name: item.name || 'Sans nom',
-              description: description || 'Aucune description',
-              createdAt: item.createdAt || '',
-              updatedAt: item.updatedAt || '',
-              publishedAt: item.publishedAt || ''
-            };
-          });
-
-          console.log('Données transformées:', JSON.stringify(transformedData, null, 2));
           setSubreddits(transformedData);
         } else {
           setError('Format de données incorrect');
@@ -99,7 +104,7 @@ const RightSidebar: React.FC = () => {
                       {subreddit.name}
                     </h3>
                     <p className="community-description">
-                      {subreddit.description}
+                      {subreddit.description || 'Aucune description'}
                     </p>
                   </div>
                 </div>
