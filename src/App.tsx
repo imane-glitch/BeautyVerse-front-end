@@ -22,7 +22,6 @@ interface SignupModalProps {
   onEmailChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
   onRegister: () => void;
-  onSwitchToLogin: () => void;
 }
 
 const SignupModal: React.FC<SignupModalProps> = ({
@@ -32,8 +31,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
   onUsernameChange,
   onEmailChange,
   onPasswordChange,
-  onRegister,
-  onSwitchToLogin
+  onRegister
 }) => (
   <div className="modal-overlay">
     <div className="modal-content">
@@ -42,9 +40,6 @@ const SignupModal: React.FC<SignupModalProps> = ({
       <input type="email" placeholder="Email" value={registerEmail} onChange={(e) => onEmailChange(e.target.value)} />
       <input type="password" placeholder="Mot de passe" value={registerPassword} onChange={(e) => onPasswordChange(e.target.value)} />
       <button onClick={onRegister}>S'inscrire</button>
-      <p>
-        Déjà un compte ? <span className="switch-link" onClick={onSwitchToLogin}>Se connecter</span>
-      </p>
     </div>
   </div>
 );
@@ -55,7 +50,6 @@ interface LoginModalProps {
   onEmailChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
   onLogin: () => void;
-  onSwitchToSignup: () => void;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({
@@ -63,8 +57,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
   password,
   onEmailChange,
   onPasswordChange,
-  onLogin,
-  onSwitchToSignup
+  onLogin
 }) => (
   <div className="modal-overlay">
     <div className="modal-content">
@@ -72,9 +65,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
       <input type="email" placeholder="Email" value={email} onChange={(e) => onEmailChange(e.target.value)} />
       <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => onPasswordChange(e.target.value)} />
       <button onClick={onLogin}>Se connecter</button>
-      <p>
-        Pas encore de compte ? <span className="switch-link" onClick={onSwitchToSignup}>S'inscrire</span>
-      </p>
     </div>
   </div>
 );
@@ -142,10 +132,12 @@ interface Post {
   image: ImageData[] | null;
 }
 
+// Créer une instance axios avec la configuration de base
 const api = axios.create({
   baseURL: STRAPI_URL,
 });
 
+// Intercepteur pour ajouter le token à toutes les requêtes
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -165,18 +157,9 @@ function App(): JSX.Element {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const switchToSignup = () => {
-    setShowLoginModal(false);
-    setShowSignupModal(true);
-  };
-
-  const switchToLogin = () => {
-    setShowSignupModal(false);
-    setShowLoginModal(true);
-  };
-
   useEffect(() => {
     const token = localStorage.getItem('token');
+    console.log('Token in localStorage:', token);
     if (token) {
       setIsAuthenticated(true);
     } else {
@@ -186,6 +169,7 @@ function App(): JSX.Element {
 
   const fetchPosts = async () => {
     try {
+      console.log('Fetching posts...');
       const token = localStorage.getItem('token');
 
       const response = await api.get('/api/posts', {
@@ -199,9 +183,20 @@ function App(): JSX.Element {
           Authorization: `Bearer ${token}`
         }
       });
-
+      
+      console.log('Posts response:', response.data);
       const posts = response.data.results || [];
+      if (posts.length > 0) {
+        console.log('Premier post détaillé:', JSON.stringify(posts[0], null, 2));
+        // Log pour déboguer les images
+        posts.forEach((post: StrapiPost) => {
+          if (post.image && post.image.length > 0) {
+            console.log(`Post "${post.title}" - Image:`, JSON.stringify(post.image[0], null, 2));
+          }
+        });
+      }
 
+      // Transformer les données pour correspondre à notre structure
       const transformedPosts = posts.map((post: StrapiPost) => ({
         id: post.id,
         title: post.title,
@@ -230,9 +225,13 @@ function App(): JSX.Element {
 
       setPosts(transformedPosts);
     } catch (error) {
-      console.error('Erreur lors du chargement des posts:', error);
+      console.error('Erreur détaillée lors du chargement des posts:', error);
       if (axios.isAxiosError(error)) {
+        const responseData = error.response?.data;
+        console.log('Détails de l\'erreur:', responseData);
+        
         if (error.response?.status === 401 || error.response?.status === 403) {
+          console.log('Token expiré ou invalide');
           localStorage.removeItem('token');
           setIsAuthenticated(false);
           setShowLoginModal(true);
@@ -249,29 +248,35 @@ function App(): JSX.Element {
 
   const handleLogin = async () => {
     try {
+      console.log('Tentative de connexion...');
       const response = await api.post('/auth/local', {
         identifier: email,
         password: password,
       });
+      console.log('Réponse de connexion:', response.data);
       const token = response.data.jwt;
       localStorage.setItem('token', token);
       setIsAuthenticated(true);
       setShowLoginModal(false);
       setEmail('');
       setPassword('');
+      // Recharger les posts immédiatement après la connexion
       await fetchPosts();
     } catch (error) {
+      console.error('Erreur détaillée de connexion:', error);
       alert('Erreur de connexion. Vérifiez vos identifiants.');
     }
   };
 
   const handleRegister = async () => {
     try {
+      console.log('Tentative d\'inscription...');
       const response = await api.post('/auth/local/register', {
         username: registerUsername,
         email: registerEmail,
         password: registerPassword,
       });
+      console.log('Réponse d\'inscription:', response.data);
       const token = response.data.jwt;
       localStorage.setItem('token', token);
       setIsAuthenticated(true);
@@ -279,12 +284,14 @@ function App(): JSX.Element {
       setRegisterEmail('');
       setRegisterUsername('');
       setRegisterPassword('');
+      // Recharger les posts immédiatement après l'inscription
       await fetchPosts();
     } catch (error) {
+      console.error('Erreur détaillée d\'inscription:', error);
       if (axios.isAxiosError(error) && error.response?.data?.error) {
         alert(error.response.data.error.message);
       } else {
-        alert("Erreur lors de l'inscription");
+        alert('Erreur lors de l\'inscription');
       }
     }
   };
@@ -293,8 +300,8 @@ function App(): JSX.Element {
     const now = new Date();
     const postDate = new Date(dateString);
     const diffInHours = Math.floor((now.getTime() - postDate.getTime()) / (1000 * 60 * 60));
-
-    if (diffInHours < 1) return "moins d'une heure";
+    
+    if (diffInHours < 1) return 'moins d\'une heure';
     if (diffInHours < 24) return `${diffInHours}h`;
     const diffInDays = Math.floor(diffInHours / 24);
     return `${diffInDays}j`;
@@ -328,7 +335,6 @@ function App(): JSX.Element {
           </main>
           <RightSidebar />
         </div>
-
         {showLoginModal && (
           <LoginModal
             email={email}
@@ -336,10 +342,8 @@ function App(): JSX.Element {
             onEmailChange={setEmail}
             onPasswordChange={setPassword}
             onLogin={handleLogin}
-            onSwitchToSignup={switchToSignup}
           />
         )}
-
         {showSignupModal && (
           <SignupModal
             registerUsername={registerUsername}
@@ -349,7 +353,6 @@ function App(): JSX.Element {
             onEmailChange={setRegisterEmail}
             onPasswordChange={setRegisterPassword}
             onRegister={handleRegister}
-            onSwitchToLogin={switchToLogin}
           />
         )}
       </div>
