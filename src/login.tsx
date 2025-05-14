@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 
-axios.defaults.baseURL = 'http://localhost:1337';
+axios.defaults.baseURL = 'http://localhost:1337/api';
 
 function Login() {
   const [identifier, setIdentifier] = useState('');
@@ -11,7 +11,7 @@ function Login() {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/local', {
+      const res = await axios.post('/auth/local', {
         identifier,
         password,
       });

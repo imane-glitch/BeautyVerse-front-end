@@ -249,7 +249,7 @@ function App(): JSX.Element {
   const handleLogin = async () => {
     try {
       console.log('Tentative de connexion...');
-      const response = await api.post('/auth/local', {
+      const response = await api.post('/api/auth/local', {
         identifier: email,
         password: password,
       });
