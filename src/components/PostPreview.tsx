@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './PostPreview.css';
+import Comments from './Comments';
 
 interface Block {
   type: string;
@@ -43,6 +44,8 @@ interface PostPreviewProps {
 }
 
 const PostPreview: React.FC<PostPreviewProps> = ({ post, formatTimeAgo }) => {
+  const [showComments, setShowComments] = useState(false);
+
   const renderContent = (content: Block[] | string | undefined) => {
     if (!content) return null;
 
@@ -106,10 +109,14 @@ const PostPreview: React.FC<PostPreviewProps> = ({ post, formatTimeAgo }) => {
           <span>{post.like_count || 0}</span>
           <span>↓</span>
         </div>
-        <div className="post-comments">
-          <span>💬 0 comments</span>
+        <div className="post-comments" onClick={() => setShowComments(!showComments)}>
+          <span>💬 Commentaires</span>
         </div>
       </div>
+
+      {showComments && (
+        <Comments postId={post.id} formatTimeAgo={formatTimeAgo} />
+      )}
     </div>
   );
 };
