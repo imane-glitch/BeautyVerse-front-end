@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import CreatePostButton from './CreatePostButton';
+import LogoutButton from './LogoutButton';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const Navbar: React.FC = () => {
         
         <div className="right-section">
           <CreatePostButton />
+          <LogoutButton />
         </div>
       </div>
     </header>
