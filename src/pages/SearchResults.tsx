@@ -4,26 +4,40 @@ import axios from 'axios';
 import PostPreview from '../components/PostPreview';
 import './SearchResults.css';
 
+interface Block {
+  type: string;
+  children: Array<{
+    type: string;
+    text: string;
+  }>;
+}
+
+interface ImageData {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: string | null;
+  caption: string | null;
+  url: string;
+}
+
 interface Post {
   id: number;
   title: string;
-  content: any;
+  content: string | Block[];
   createdAt: string;
   publishedAt: string;
-  like_count: string;
-  link: string | null;
+  like_count: number;
+  link?: string;
   user: {
     id: number;
     username: string;
-  };
+  } | null;
   subreddit: {
     id: number;
     name: string;
-  };
-  image: Array<{
-    id: number;
-    url: string;
-  }>;
+  } | null;
+  image: ImageData[] | null;
 }
 
 const SearchResults: React.FC = () => {

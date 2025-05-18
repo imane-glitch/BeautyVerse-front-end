@@ -40,12 +40,7 @@ function Home() {
     });
   }, []);
 
-  return (
-    <div>
-      <h2>Home – Contenu protégé</h2>
-      {data.length ? <PostPreview posts={data} /> : <p>Chargement...</p>}
-    </div>
-  );
+ 
 }
 
 
